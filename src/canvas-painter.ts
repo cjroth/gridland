@@ -327,22 +327,23 @@ export class CanvasPainter {
               }
               ctx.stroke()
             } else if (def.arc) {
-              // Rounded corners: draw an arc instead of straight lines
-              const r = Math.min(cw, ch) / 2
+              // Rounded corners: use ellipse to handle rectangular cells (ch ≠ cw)
+              const rx = cw / 2
+              const ry = ch / 2
               ctx.lineWidth = 1
               ctx.beginPath()
               if (def.arc === "tl") {
                 // ╭: arc from right edge to bottom edge
-                ctx.arc(cellX + cw, cellY + ch, r, Math.PI, Math.PI * 1.5)
+                ctx.ellipse(cellX + cw, cellY + ch, rx, ry, 0, Math.PI, Math.PI * 1.5)
               } else if (def.arc === "tr") {
                 // ╮: arc from left edge to bottom edge
-                ctx.arc(cellX, cellY + ch, r, Math.PI * 1.5, Math.PI * 2)
+                ctx.ellipse(cellX, cellY + ch, rx, ry, 0, Math.PI * 1.5, Math.PI * 2)
               } else if (def.arc === "bl") {
                 // ╰: arc from right edge to top edge
-                ctx.arc(cellX + cw, cellY, r, Math.PI * 0.5, Math.PI)
+                ctx.ellipse(cellX + cw, cellY, rx, ry, 0, Math.PI * 0.5, Math.PI)
               } else if (def.arc === "br") {
                 // ╯: arc from left edge to top edge
-                ctx.arc(cellX, cellY, r, 0, Math.PI * 0.5)
+                ctx.ellipse(cellX, cellY, rx, ry, 0, 0, Math.PI * 0.5)
               }
               ctx.stroke()
             } else if (charCode === 0x2571 || charCode === 0x2572 || charCode === 0x2573) {

@@ -11,7 +11,7 @@ export function BordersFixture() {
         <box border borderStyle="double" borderColor="#a3be8c" padding={1}>
           <text fg="#d8dee9">Double border</text>
         </box>
-        <box border borderStyle="round" borderColor="#b48ead" padding={1}>
+        <box border borderStyle="rounded" borderColor="#b48ead" padding={1}>
           <text fg="#d8dee9">Round border</text>
         </box>
         <box border borderStyle="bold" borderColor="#ebcb8b" padding={1}>
