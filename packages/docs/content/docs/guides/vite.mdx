@@ -51,17 +51,10 @@ import { polytermWebPlugin } from "@polyterm.io/web/vite-plugin"
 export default defineConfig({
   plugins: [
     react(),
-    ...polytermWebPlugin({
-      opentuiPath: "../path/to/opentui",
-    }),
+    ...polytermWebPlugin(),
   ],
 })
 ```
-
-<Callout type="warn">
-The `opentuiPath` option must point to the root of the opentui monorepo so the
-plugin can resolve `@opentui/core`, `@opentui/react`, and `@opentui/ui`.
-</Callout>
 
 </Step>
 <Step>
@@ -73,7 +66,7 @@ Wrap your TUI content in `TUI`:
 ```tsx title="App.tsx"
 import { TUI } from "@polyterm.io/web"
 
-function TuiDemo() {
+function PolytermDemo() {
   return (
     <box flexDirection="column" padding={1}>
       <box border borderStyle="rounded" borderColor="#88c0d0" padding={1}>
@@ -86,7 +79,7 @@ function TuiDemo() {
 export default function App() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <TuiDemo />
+      <PolytermDemo />
     </TUI>
   )
 }

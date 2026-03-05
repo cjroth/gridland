@@ -45,16 +45,15 @@ Use the `withPolyterm` plugin to configure webpack automatically:
 ```ts title="next.config.ts"
 import { withPolyterm } from "@polyterm.io/web/next-plugin"
 
-export default withPolyterm("../path/to/opentui")
+export default withPolyterm()
 ```
 
-The first argument is the path to the opentui monorepo root. You can pass
-additional Next.js config as a second argument:
+You can pass additional Next.js config as an argument:
 
 ```ts title="next.config.ts"
 import { withPolyterm } from "@polyterm.io/web/next-plugin"
 
-export default withPolyterm("../path/to/opentui", {
+export default withPolyterm({
   reactStrictMode: true,
   // ... other Next.js config
 })
@@ -75,7 +74,7 @@ Mark your page as a client component and use `TUI`:
 
 import { TUI } from "@polyterm.io/web"
 
-function TuiDemo() {
+function PolytermDemo() {
   return (
     <box border borderStyle="rounded" padding={1}>
       <text fg="#a3be8c">Hello from Next.js!</text>
@@ -86,7 +85,7 @@ function TuiDemo() {
 export default function Home() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <TuiDemo />
+      <PolytermDemo />
     </TUI>
   )
 }

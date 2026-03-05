@@ -2,7 +2,7 @@
 
 import { TUI } from "../../../packages/polyterm-web/src/TUI"
 
-function TuiDemo() {
+function PolytermDemo() {
   return (
     <box flexDirection="column" width="100%" height="100%" padding={1}>
       <box
@@ -68,7 +68,7 @@ function TuiDemo() {
 export default function Home() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <TuiDemo />
+      <PolytermDemo />
     </TUI>
   )
 }

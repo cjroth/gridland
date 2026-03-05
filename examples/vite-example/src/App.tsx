@@ -1,6 +1,6 @@
 import { TUI } from "../../../packages/polyterm-web/src/TUI"
 
-function TuiDemo() {
+function PolytermDemo() {
   return (
     <box
       flexDirection="column"
@@ -62,7 +62,7 @@ function TuiDemo() {
 export function App() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <TuiDemo />
+      <PolytermDemo />
     </TUI>
   )
 }

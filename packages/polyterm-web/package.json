@@ -58,6 +58,14 @@
     "vite": "^6.0.0"
   },
   "peerDependencies": {
+    "@opentui/core": "*",
+    "@opentui/react": "*",
+    "@opentui/ui": "*",
     "react": ">=19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@opentui/core": { "optional": true },
+    "@opentui/react": { "optional": true },
+    "@opentui/ui": { "optional": true }
   }
 }

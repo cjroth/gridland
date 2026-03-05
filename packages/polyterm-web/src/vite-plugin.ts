@@ -2,14 +2,6 @@ import { type Plugin } from "vite"
 import path from "path"
 import { createRequire } from "module"
 
-export interface PolytermWebPluginOptions {
-  /**
-   * Path to the opentui monorepo root.
-   * Required so the plugin can resolve @opentui/core, @opentui/react, and @opentui/ui.
-   */
-  opentuiPath: string
-}
-
 /**
  * Vite plugin that sets up module resolution for Polyterm.
  * Handles:
@@ -17,14 +9,22 @@ export interface PolytermWebPluginOptions {
  * - Resolving @opentui/core, @opentui/react, @opentui/ui
  * - Shimming Node.js built-ins
  * - Breaking circular dependencies
+ *
+ * Requires @opentui/core, @opentui/react, and @opentui/ui as peer dependencies.
  */
-export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
-  const opentui = path.resolve(options.opentuiPath)
+export function polytermWebPlugin(): Plugin[] {
   const pkgRoot = path.resolve(__dirname, "..")
+  const _require = createRequire(path.resolve(pkgRoot, "package.json"))
+
+  // Resolve opentui package roots from peer dependencies
+  const coreRoot = path.dirname(_require.resolve("@opentui/core/package.json"))
+  const reactRoot = path.dirname(_require.resolve("@opentui/react/package.json"))
+  const uiRoot = path.dirname(_require.resolve("@opentui/ui/package.json"))
+
   const coreShims = path.resolve(pkgRoot, "src/core-shims/index.ts")
-  const opentuiCoreBarrel = path.resolve(opentui, "packages/core/src/index.ts")
+  const opentuiCoreBarrel = path.resolve(coreRoot, "src/index.ts")
   const sliderDeps = path.resolve(pkgRoot, "src/shims/slider-deps.ts")
-  const sliderFile = path.resolve(opentui, "packages/core/src/renderables/Slider.ts")
+  const sliderFile = path.resolve(coreRoot, "src/renderables/Slider.ts")
 
   // Map of opentui source files that need browser shims
   const coreFileShims: Record<string, string> = {
@@ -44,12 +44,33 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
 
   const resolvedCoreShims = new Map<string, string>()
   for (const [key, shimPath] of Object.entries(coreFileShims)) {
-    const absoluteTarget = path.resolve(opentui, "packages/core/src", key + ".ts")
+    const absoluteTarget = path.resolve(coreRoot, "src", key + ".ts")
     resolvedCoreShims.set(absoluteTarget, path.resolve(pkgRoot, shimPath))
   }
 
   const treeStub = path.resolve(pkgRoot, "src/shims/tree-sitter-stub.ts")
   const styledTextStub = path.resolve(pkgRoot, "src/shims/tree-sitter-styled-text-stub.ts")
+
+  // Lookup tables hoisted out of resolveId to avoid per-call allocation
+  const pkgRoots: Record<string, string> = { core: coreRoot, react: reactRoot, ui: uiRoot }
+
+  const nodeShims: Record<string, string> = {
+    "node:buffer": "src/shims/node-buffer.ts",
+    "node:path": "src/shims/node-path.ts",
+    path: "src/shims/node-path.ts",
+    "node:fs": "src/shims/node-fs.ts",
+    fs: "src/shims/node-fs.ts",
+    "fs/promises": "src/shims/node-fs.ts",
+    "node:util": "src/shims/node-util.ts",
+    util: "src/shims/node-util.ts",
+    os: "src/shims/node-os.ts",
+    "node:os": "src/shims/node-os.ts",
+    stream: "src/shims/node-stream.ts",
+    "node:stream": "src/shims/node-stream.ts",
+    url: "src/shims/node-url.ts",
+    "node:url": "src/shims/node-url.ts",
+    bun: "src/shims/bun-ffi.ts",
+  }
 
   // Virtual module prefix for npm package redirects.
   // When external opentui code imports a bare npm package (e.g. "react"),
@@ -68,8 +89,11 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
       // Virtual module redirects should not be re-intercepted
       if (importer.startsWith(NPM_REDIRECT)) return null
 
-      // Check if importer is in the external opentui monorepo (not our workspace)
-      const isExternalOpentui = importer.startsWith(opentui + path.sep)
+      // Check if importer is in an opentui package
+      const isExternalOpentui =
+        importer.startsWith(coreRoot + path.sep) ||
+        importer.startsWith(reactRoot + path.sep) ||
+        importer.startsWith(uiRoot + path.sep)
 
       // Slider circular dep fix
       if (source === "../index" && importer === sliderFile) {
@@ -78,15 +102,15 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
 
       // Resolve @opentui packages
       if (source === "@opentui/ui") {
-        return path.resolve(opentui, "packages/ui/src/index.ts")
+        return path.resolve(uiRoot, "src/index.ts")
       }
       if (source === "@opentui/react") {
-        return path.resolve(opentui, "packages/react/src/index.ts")
+        return path.resolve(reactRoot, "src/index.ts")
       }
 
       // @opentui/core routing
       if (source === "@opentui/core") {
-        if (importer.includes("opentui/packages/react")) {
+        if (importer.startsWith(reactRoot + path.sep)) {
           return opentuiCoreBarrel
         }
         return coreShims
@@ -98,12 +122,13 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
         const pkgName = parts[1] // "react", "core", "ui"
         const subpath = parts.slice(2).join("/") // "jsx-dev-runtime"
         if (subpath) {
-          return path.resolve(opentui, "packages", pkgName, subpath + ".js")
+          const root = pkgRoots[pkgName]
+          if (root) return path.resolve(root, subpath + ".js")
         }
       }
 
       // Relative imports from opentui tree → check shims
-      if (source.startsWith(".") && importer.includes("opentui")) {
+      if (source.startsWith(".") && isExternalOpentui) {
         const importerDir = path.dirname(importer)
         const resolved = path.resolve(importerDir, source)
         // Devtools polyfill stub (uses top-level await for ws import)
@@ -132,24 +157,6 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
 
       // Node.js built-in stubs (only for imports from the opentui monorepo,
       // since our own workspace code doesn't import these)
-      const nodeShims: Record<string, string> = {
-        "node:buffer": "src/shims/node-buffer.ts",
-        "node:path": "src/shims/node-path.ts",
-        path: "src/shims/node-path.ts",
-        "node:fs": "src/shims/node-fs.ts",
-        fs: "src/shims/node-fs.ts",
-        "fs/promises": "src/shims/node-fs.ts",
-        "node:util": "src/shims/node-util.ts",
-        util: "src/shims/node-util.ts",
-        os: "src/shims/node-os.ts",
-        "node:os": "src/shims/node-os.ts",
-        stream: "src/shims/node-stream.ts",
-        "node:stream": "src/shims/node-stream.ts",
-        url: "src/shims/node-url.ts",
-        "node:url": "src/shims/node-url.ts",
-        bun: "src/shims/bun-ffi.ts",
-      }
-
       if (nodeShims[source] && isExternalOpentui) {
         return path.resolve(pkgRoot, nodeShims[source])
       }
@@ -175,7 +182,6 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
         // NOTE: We use bare specifiers (not resolved paths) so Vite routes
         // these through its pre-bundling pipeline for CJS-to-ESM conversion.
         try {
-          const _require = createRequire(path.resolve(pkgRoot, "package.json"))
           const mod = _require(pkg)
           if (typeof mod === "object" && mod !== null) {
             const names = Object.keys(mod).filter(
@@ -204,8 +210,6 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
     },
   }
 
-  const _require = createRequire(path.resolve(pkgRoot, "package.json"))
-
   const aliasPlugin: Plugin = {
     name: "polyterm-web-aliases",
     config() {
@@ -218,7 +222,7 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
 
       // Core file shims as aliases too
       for (const [key, shimPath] of Object.entries(coreFileShims)) {
-        aliases[path.resolve(opentui, "packages/core/src", key)] = path.resolve(pkgRoot, shimPath)
+        aliases[path.resolve(coreRoot, "src", key)] = path.resolve(pkgRoot, shimPath)
       }
 
       // Resolve npm packages from polyterm-web's node_modules so consuming
@@ -254,7 +258,7 @@ export function polytermWebPlugin(options: PolytermWebPluginOptions): Plugin[] {
         },
         server: {
           fs: {
-            allow: [pkgRoot, opentui, path.resolve(pkgRoot, "../..")],
+            allow: [pkgRoot, coreRoot, reactRoot, uiRoot, path.resolve(pkgRoot, "../..")],
           },
         },
       }

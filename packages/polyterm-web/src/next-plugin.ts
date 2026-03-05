@@ -1,4 +1,5 @@
 import path from "path"
+import { createRequire } from "module"
 
 type WebpackConfig = any
 type WebpackInstance = any
@@ -14,13 +15,19 @@ interface NextConfig {
  * FFI shims, tree-sitter stubs, Node.js built-in stubs, and circular
  * dependency fixes.
  *
- * @param opentuiPath - Path to the opentui monorepo root (relative to project root or absolute)
+ * Requires @opentui/core, @opentui/react, and @opentui/ui as peer dependencies.
+ *
  * @param nextConfig - Optional additional Next.js config to merge
  */
-export function withPolyterm(opentuiPath: string, nextConfig: NextConfig = {}): NextConfig {
+export function withPolyterm(nextConfig: NextConfig = {}): NextConfig {
   // __dirname works natively in CJS; tsup shims it for ESM via import.meta.url
   const pkgRoot = path.resolve(__dirname, "..")
-  const opentui = path.resolve(opentuiPath)
+  const _require = createRequire(path.resolve(pkgRoot, "package.json"))
+
+  // Resolve opentui package roots from peer dependencies
+  const coreRoot = path.dirname(_require.resolve("@opentui/core/package.json"))
+  const reactRoot = path.dirname(_require.resolve("@opentui/react/package.json"))
+  const uiRoot = path.dirname(_require.resolve("@opentui/ui/package.json"))
 
   function shimPath(p: string) {
     return path.resolve(pkgRoot, p)
@@ -60,8 +67,8 @@ export function withPolyterm(opentuiPath: string, nextConfig: NextConfig = {}): 
       const sharedAliases: Record<string, string> = {
         // @opentui packages — core-shims includes all exports @opentui/react needs
         "@opentui/core": shimPath("src/core-shims/index.ts"),
-        "@opentui/react": path.resolve(opentui, "packages/react/src/index.ts"),
-        "@opentui/ui": path.resolve(opentui, "packages/ui/src/index.ts"),
+        "@opentui/react": path.resolve(reactRoot, "src/index.ts"),
+        "@opentui/ui": path.resolve(uiRoot, "src/index.ts"),
 
         // FFI shims (no Zig/Bun on server or client in browser context)
         "bun:ffi": shimPath("src/shims/bun-ffi.ts"),
@@ -74,21 +81,21 @@ export function withPolyterm(opentuiPath: string, nextConfig: NextConfig = {}): 
         "web-tree-sitter": shimPath("src/shims/tree-sitter-stub.ts"),
         "hast-styled-text": shimPath("src/shims/hast-stub.ts"),
         // Internal tree-sitter source directories (pulled in via renderable imports)
-        [path.resolve(opentui, "packages/core/src/lib/tree-sitter-styled-text")]:
+        [path.resolve(coreRoot, "src/lib/tree-sitter-styled-text")]:
           shimPath("src/shims/tree-sitter-styled-text-stub.ts"),
-        [path.resolve(opentui, "packages/core/src/lib/tree-sitter")]:
+        [path.resolve(coreRoot, "src/lib/tree-sitter")]:
           shimPath("src/shims/tree-sitter-stub.ts"),
-        [path.resolve(opentui, "packages/core/src/lib/hast-styled-text")]:
+        [path.resolve(coreRoot, "src/lib/hast-styled-text")]:
           shimPath("src/shims/hast-stub.ts"),
 
         // Devtools polyfill stub (original uses top-level await for ws import)
-        [path.resolve(opentui, "packages/react/src/reconciler/devtools-polyfill")]:
+        [path.resolve(reactRoot, "src/reconciler/devtools-polyfill")]:
           shimPath("src/shims/devtools-polyfill-stub.ts"),
       }
 
       // Core file shims (opentui source → browser shim)
       for (const [key, shimFile] of Object.entries(coreFileShims)) {
-        sharedAliases[path.resolve(opentui, "packages/core/src", key)] = shimPath(shimFile)
+        sharedAliases[path.resolve(coreRoot, "src", key)] = shimPath(shimFile)
       }
 
       config.resolve = config.resolve || {}
@@ -100,7 +107,7 @@ export function withPolyterm(opentuiPath: string, nextConfig: NextConfig = {}): 
       // Slider circular dependency fix: Slider.ts imports from "../index" which
       // creates barrel → renderables → Slider → barrel cycle. Redirect to a
       // minimal deps file that provides only what Slider needs.
-      const renderablesDir = path.resolve(opentui, "packages/core/src/renderables")
+      const renderablesDir = path.resolve(coreRoot, "src/renderables")
       config.plugins.push(
         new webpack.NormalModuleReplacementPlugin(/^\.\.\/index$/, (resource: any) => {
           if (resource.context === renderablesDir) {

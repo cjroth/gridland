@@ -20,15 +20,10 @@ import { TUI } from "@polyterm.io/web"
 import { polytermWebPlugin } from "@polyterm.io/web/vite-plugin"
 ```
 
-### `polytermWebPlugin(options)`
+### `polytermWebPlugin()`
 
 Returns an array of Vite plugins that configure module resolution for the opentui engine.
-
-**Options:**
-
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `opentuiPath` | `string` | Yes | Path to the opentui monorepo root |
+Resolves `@opentui/core`, `@opentui/react`, and `@opentui/ui` from peer dependencies.
 
 ## Internal Modules
 
