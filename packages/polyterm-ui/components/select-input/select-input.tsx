@@ -69,9 +69,9 @@ export function SelectInput<V>({
       textColor={textColor}
       selectedTextColor={selectedTextColor}
       focusedTextColor={focusedTextColor}
-      backgroundColor={backgroundColor}
-      selectedBackgroundColor={selectedBackgroundColor}
-      focusedBackgroundColor={focusedBackgroundColor}
+      backgroundColor={backgroundColor ?? "transparent"}
+      selectedBackgroundColor={selectedBackgroundColor ?? "transparent"}
+      focusedBackgroundColor={focusedBackgroundColor ?? "transparent"}
     />
   )
 }

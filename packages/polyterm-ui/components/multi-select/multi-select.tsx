@@ -114,7 +114,7 @@ export function MultiSelect<V>({
         return (
           <text key={item.key ?? String(item.value)}>
             <span style={{ fg: isHighlighted ? "blue" : undefined }}>
-              {isHighlighted ? "\u276f" : " "}{" "}
+              {isHighlighted ? "\u25b6" : " "}{" "}
             </span>
             <span style={{ fg: "green" }}>
               {itemIsSelected ? "\u25c9" : "\u25cb"}{" "}

@@ -1,7 +1,7 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 import type { ReactNode } from "react"
 import { Table } from "../components/table/table"
-import { Gradient } from "../components/gradient/gradient"
+import { Gradient, GRADIENTS, type GradientName } from "../components/gradient/gradient"
 import { Spinner } from "../components/spinner/spinner"
 import { SelectInput } from "../components/select-input/select-input"
 import { MultiSelect } from "../components/multi-select/multi-select"
@@ -40,6 +40,10 @@ const selectItems = [
 const asciiArt = figlet.textSync("OpenTUI", { font: "ANSI Shadow" as any })
 const asciiLines = asciiArt.split("\n").filter((l: string) => l.trimEnd().length > 0)
 
+const gradientAsciiArt = figlet.textSync("polyterm", { font: "ANSI Shadow" as any })
+const gradientAsciiLines = gradientAsciiArt.split("\n").filter((l: string) => l.trimEnd().length > 0)
+const gradientNames = Object.keys(GRADIENTS) as GradientName[]
+
 export const fixtures: DemoFixture[] = [
   {
     name: "table",
@@ -53,13 +57,17 @@ export const fixtures: DemoFixture[] = [
   },
   {
     name: "gradient",
-    cols: 60,
-    rows: 8,
+    cols: 80,
+    rows: 14,
     jsx: () => (
-      <box padding={1} flexDirection="column" gap={1}>
-        <Gradient name="rainbow">{"Hello, Gradient!"}</Gradient>
-        <Gradient name="passion">{"Passion gradient text"}</Gradient>
-        <Gradient name="vice">{"Vice gradient text"}</Gradient>
+      <box padding={1} flexDirection="column" alignItems="center" justifyContent="center" flexGrow={1}>
+        <Gradient name="rainbow">{gradientAsciiLines.join("\n")}</Gradient>
+        <text> </text>
+        <StatusBar
+          items={[
+            { key: "\u2190\u2192", label: "gradient" },
+          ]}
+        />
       </box>
     ),
   },
