@@ -43,6 +43,16 @@ export default defineConfig([
     platform: "browser",
     banner: { js: '"use client";' },
   },
+  // Next.js plugin (Node.js, ESM + CJS since Next.js loads config via require())
+  {
+    entry: { "next-plugin": "src/next-plugin.ts" },
+    format: ["esm", "cjs"],
+    dts: true,
+    sourcemap: true,
+    external: ["next", "webpack"],
+    target: "node18",
+    platform: "node",
+  },
   // Utils (SSR-safe)
   {
     entry: { utils: "src/utils.ts" },
