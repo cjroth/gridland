@@ -123,12 +123,10 @@ export const fixtures: DemoFixture[] = [
     cols: 80,
     rows: 14,
     jsx: () => (
-      <box padding={1} flexDirection="column">
+      <box padding={1} flexDirection="column" alignItems="center" justifyContent="center" flexGrow={1}>
         {asciiLines.map((line: string, i: number) => (
           <text key={i} fg="#88c0d0" bold>{line}</text>
         ))}
-        <text />
-        <text fg="#d8dee9" dim>{"  ASCII art via figlet (ANSI Shadow font)"}</text>
       </box>
     ),
   },
