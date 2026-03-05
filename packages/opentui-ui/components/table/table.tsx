@@ -1,3 +1,5 @@
+import { Fragment } from "react"
+
 type Scalar = string | number | boolean | null | undefined
 type ScalarDict = { [key: string]: Scalar }
 
@@ -119,10 +121,10 @@ export function Table<T extends ScalarDict>({
       {borderLine("\u250c", "\u252c", "\u2510")}
       {contentRow(headerData, true)}
       {data.map((row, index) => (
-        <box key={index}>
+        <Fragment key={index}>
           {borderLine("\u251c", "\u253c", "\u2524")}
           {contentRow(row, false)}
-        </box>
+        </Fragment>
       ))}
       {borderLine("\u2514", "\u2534", "\u2518")}
     </box>

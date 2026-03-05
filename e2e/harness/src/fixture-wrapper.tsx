@@ -76,10 +76,11 @@ export function FixtureWrapper({ cols, rows, children, fontSize = 14 }: FixtureW
   }, [])
 
   // Calculate pixel dimensions from cell count
-  // Default cell size at 14px font is approximately 8.4x17 but we let the canvas handle sizing
+  // Cell height must match CanvasPainter.measureCell: Math.ceil(fontSize * 1.4)
   const fontFamily = "'JetBrains Mono', monospace"
+  const cellHeight = Math.ceil(fontSize * 1.4)
   const widthPx = cols * 8.4
-  const heightPx = rows * 17
+  const heightPx = rows * cellHeight
 
   return (
     <div style={{ padding: 0, background: "#1e1e2e" }}>

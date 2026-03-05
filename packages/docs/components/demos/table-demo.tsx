@@ -13,7 +13,7 @@ const data = [
 export default function TableDemo() {
   return (
     <MacWindow title="Table">
-      <OpenTuiCanvas style={{ width: "100%", height: 180 }}>
+      <OpenTuiCanvas style={{ width: "100%", height: 240 }}>
         <box padding={1}>
           <Table data={data} headerColor="cyan" borderColor="#5e81ac" />
         </box>
