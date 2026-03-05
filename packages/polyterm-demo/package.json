@@ -1,0 +1,11 @@
+{
+  "name": "@polyterm.io/demo",
+  "version": "0.1.0",
+  "description": "Run polyterm component demos from anywhere",
+  "bin": {
+    "polyterm-demo": "./bin/cli.mjs"
+  },
+  "files": ["bin"],
+  "keywords": ["polyterm", "tui", "terminal", "demo"],
+  "license": "MIT"
+}

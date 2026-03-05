@@ -4,6 +4,7 @@ description: Built-in JSX elements for terminal UI rendering
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout'
+import { RunDemo } from '@/components/ui/run-demo'
 import PrimitivesDemo from '@/components/demos/primitives-demo'
 
 Polyterm uses JSX intrinsic elements that map to renderable components in the opentui engine.
@@ -13,11 +14,7 @@ These are used inside `<TUI>`.
   <PrimitivesDemo />
 </div>
 
-## Run demo
-
-```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/cjroth/polyterm/main/scripts/run-demo.sh | bash -s primitives
-```
+<RunDemo name="primitives" />
 
 <Callout type="info">
 These are JSX intrinsic elements, not DOM elements. `<box>` renders to the

@@ -4,6 +4,7 @@ description: Horizontal bar displaying keybinding hints
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+import { RunDemo } from '@/components/ui/run-demo'
 import StatusBarDemo from '@/components/demos/status-bar-demo'
 
 The `StatusBar` component from `@polyterm.io/ui` renders a horizontal bar that
@@ -13,11 +14,7 @@ displays keybinding hints showing key combinations and their associated actions.
   <StatusBarDemo />
 </div>
 
-## Run demo
-
-```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/cjroth/polyterm/main/scripts/run-demo.sh | bash -s status-bar
-```
+<RunDemo name="status-bar" />
 
 ## Installation
 

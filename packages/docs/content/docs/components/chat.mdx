@@ -4,6 +4,7 @@ description: Vertical chat interface with messages, tool calls, streaming, and t
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+import { RunDemo } from '@/components/ui/run-demo'
 import ChatDemo from '@/components/demos/chat-demo'
 
 The `ChatPanel` component from `@polyterm.io/ui` renders a vertical chat interface
@@ -13,11 +14,7 @@ with message display, tool call status cards, streaming text, loading indicators
   <ChatDemo />
 </div>
 
-## Run demo
-
-```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/cjroth/polyterm/main/scripts/run-demo.sh | bash -s chat
-```
+<RunDemo name="chat" />
 
 ## Installation
 

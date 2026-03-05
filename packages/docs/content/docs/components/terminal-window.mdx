@@ -4,6 +4,7 @@ description: Decorative terminal-style window chrome container
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+import { RunDemo } from '@/components/ui/run-demo'
 import TerminalWindowDemo from '@/components/demos/mac-window-demo'
 
 The `TerminalWindow` component from `@polyterm.io/ui` renders a decorative container that mimics
@@ -13,11 +14,7 @@ a terminal window, with traffic light buttons and an optional centered title. By
   <TerminalWindowDemo />
 </div>
 
-## Run demo
-
-```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/cjroth/polyterm/main/scripts/run-demo.sh | bash -s terminal
-```
+<RunDemo name="terminal" />
 
 ## Installation
 
