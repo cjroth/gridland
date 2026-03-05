@@ -1,7 +1,7 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { TUI } from "@polyterm.io/web"
-import { MacWindow } from "@/components/ui/mac-window"
+import { TerminalWindow } from "@/components/ui/mac-window"
 import { Table } from "@polyterm.io/ui"
 
 const data = [
@@ -12,12 +12,12 @@ const data = [
 
 export default function TableDemo() {
   return (
-    <MacWindow title="Table">
+    <TerminalWindow title="Table">
       <TUI style={{ width: "100%", height: 240 }}>
         <box padding={1}>
           <Table data={data} headerColor="cyan" borderColor="#5e81ac" />
         </box>
       </TUI>
-    </MacWindow>
+    </TerminalWindow>
   )
 }

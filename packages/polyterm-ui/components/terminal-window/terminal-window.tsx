@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-export interface MacWindowProps {
+export interface TerminalWindowProps {
   /** Content rendered inside the window below the title bar. */
   children: ReactNode
   /** Additional CSS classes applied to the outermost container. */
@@ -9,6 +9,8 @@ export interface MacWindowProps {
   title?: string
   /** Minimum width of the window. Applied as inline style. */
   minWidth?: number | string
+  /** When true, the window background is transparent. Defaults to false (dark gray). */
+  transparent?: boolean
   /** Callback fired when the red (close) button is clicked. */
   onClose?: () => void
   /** Callback fired when the yellow (minimize) button is clicked. */
@@ -21,25 +23,32 @@ function cn(...classes: (string | undefined | false)[]): string {
   return classes.filter(Boolean).join(" ")
 }
 
-export function MacWindow({
+export function TerminalWindow({
   children,
   className,
   title,
   minWidth,
+  transparent = false,
   onClose,
   onMinimize,
   onMaximize,
-}: MacWindowProps) {
+}: TerminalWindowProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border bg-card shadow-lg overflow-hidden",
+        "rounded-2xl border shadow-lg overflow-hidden",
         className,
       )}
-      style={minWidth != null ? { minWidth } : undefined}
+      style={{
+        ...(minWidth != null ? { minWidth } : {}),
+        ...(transparent ? {} : { backgroundColor: "#1e1e2e" }),
+      }}
     >
       {/* Title Bar */}
-      <div className="grid grid-cols-3 items-center px-3 py-2.5 border-b bg-muted/50">
+      <div
+        className="grid grid-cols-3 items-center px-3 py-2.5 border-b"
+        style={transparent ? {} : { backgroundColor: "#2a2a3c", borderColor: "#313244" }}
+      >
         {/* Traffic Light Buttons */}
         <div className="flex gap-2">
           <button
@@ -63,7 +72,10 @@ export function MacWindow({
         </div>
         {/* Title */}
         {title && (
-          <div className="text-center text-sm text-muted-foreground select-none">
+          <div
+            className="text-center text-sm select-none"
+            style={transparent ? {} : { color: "#a6adc8" }}
+          >
             {title}
           </div>
         )}

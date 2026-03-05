@@ -1,11 +1,11 @@
 // @ts-nocheck — OpenTUI intrinsic elements (box, text) conflict with React's HTML/SVG types
 "use client"
 import { TUI } from "@polyterm.io/web"
-import { MacWindow } from "@/components/ui/mac-window"
+import { TerminalWindow } from "@/components/ui/mac-window"
 
 export default function PrimitivesDemo() {
   return (
-    <MacWindow title="Primitives">
+    <TerminalWindow title="Primitives">
       <TUI style={{ width: "100%", height: 200 }}>
         <box flexDirection="column" padding={1}>
           <box
@@ -57,6 +57,6 @@ export default function PrimitivesDemo() {
           </text>
         </box>
       </TUI>
-    </MacWindow>
+    </TerminalWindow>
   )
 }

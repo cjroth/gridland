@@ -2,7 +2,7 @@
 "use client"
 import { useState } from "react"
 import { TUI } from "@polyterm.io/web"
-import { MacWindow } from "@/components/ui/mac-window"
+import { TerminalWindow } from "@/components/ui/mac-window"
 import { StatusBar, textStyle } from "@polyterm.io/ui"
 import { useKeyboard } from "@opentui/react"
 
@@ -50,10 +50,10 @@ function StatusBarApp() {
 
 export default function StatusBarDemo() {
   return (
-    <MacWindow title="StatusBar">
+    <TerminalWindow title="StatusBar">
       <TUI style={{ width: "100%", height: 80 }}>
         <StatusBarApp />
       </TUI>
-    </MacWindow>
+    </TerminalWindow>
   )
 }

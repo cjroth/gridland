@@ -1,16 +1,16 @@
 ---
-title: MacWindow
-description: Decorative macOS-style window chrome container
+title: TerminalWindow
+description: Decorative terminal-style window chrome container
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
-import MacWindowDemo from '@/components/demos/mac-window-demo'
+import TerminalWindowDemo from '@/components/demos/mac-window-demo'
 
-The `MacWindow` component from `@polyterm.io/ui` renders a decorative container that mimics
-a macOS application window, with traffic light buttons and an optional centered title.
+The `TerminalWindow` component from `@polyterm.io/ui` renders a decorative container that mimics
+a terminal window, with traffic light buttons and an optional centered title. By default it has a dark gray background to look like a real terminal.
 
 <div className="my-8">
-  <MacWindowDemo />
+  <TerminalWindowDemo />
 </div>
 
 ## Installation
@@ -41,15 +41,15 @@ bun add @polyterm.io/ui
 ## Import
 
 ```tsx title="Import"
-import { MacWindow } from "@polyterm.io/ui"
+import { TerminalWindow } from "@polyterm.io/ui"
 ```
 
 ## Usage
 
 ```tsx title="Example"
-<MacWindow title="my-terminal">
+<TerminalWindow title="my-terminal">
   <div>Window content here</div>
-</MacWindow>
+</TerminalWindow>
 ```
 
 ## Props
@@ -60,6 +60,7 @@ import { MacWindow } from "@polyterm.io/ui"
 | `className` | `string` | `undefined` | Additional CSS classes |
 | `title` | `string` | `undefined` | Centered title bar text |
 | `minWidth` | `number \| string` | `undefined` | Minimum width of the window |
+| `transparent` | `boolean` | `false` | When true, the window background is transparent instead of dark gray |
 | `onClose` | `() => void` | `undefined` | Close button callback |
 | `onMinimize` | `() => void` | `undefined` | Minimize button callback |
 | `onMaximize` | `() => void` | `undefined` | Maximize button callback |

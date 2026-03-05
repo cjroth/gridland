@@ -2,7 +2,7 @@
 "use client"
 import { useState } from "react"
 import { TUI } from "@polyterm.io/web"
-import { MacWindow } from "@/components/ui/mac-window"
+import { TerminalWindow } from "@/components/ui/mac-window"
 import { TabBar, textStyle } from "@polyterm.io/ui"
 import { useKeyboard } from "@opentui/react"
 
@@ -30,10 +30,10 @@ function TabBarApp() {
 
 export default function TabBarDemo() {
   return (
-    <MacWindow title="TabBar">
+    <TerminalWindow title="TabBar">
       <TUI style={{ width: "100%", height: 80 }}>
         <TabBarApp />
       </TUI>
-    </MacWindow>
+    </TerminalWindow>
   )
 }

@@ -1,5 +1,8 @@
 export { Link } from "./link/link"
-export type { LinkProps } from "./link/link"
+export type { LinkProps, UnderlineStyle } from "./link/link"
+
+export { LinkDemo } from "./link/link-demo"
+export type { LinkDemoProps } from "./link/link-demo"
 
 export { Ascii } from "./ascii/ascii"
 export type { AsciiProps } from "./ascii/ascii"
@@ -34,8 +37,8 @@ export type { ModalProps } from "./modal/modal"
 export { ChatPanel } from "./chat/chat"
 export type { ChatPanelProps, ChatMessage, ToolCallInfo } from "./chat/chat"
 
-export { MacWindow } from "./mac-window/mac-window"
-export type { MacWindowProps } from "./mac-window/mac-window"
+export { TerminalWindow } from "./terminal-window/terminal-window"
+export type { TerminalWindowProps } from "./terminal-window/terminal-window"
 
 export { CornerRibbon, BadgeButton, TextBadge } from "./made-with-opentui/made-with-opentui"
 export type { CornerRibbonProps, BadgeButtonProps, TextBadgeProps } from "./made-with-opentui/made-with-opentui"

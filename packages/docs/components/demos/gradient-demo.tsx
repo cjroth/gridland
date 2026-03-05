@@ -1,12 +1,12 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { TUI } from "@polyterm.io/web"
-import { MacWindow } from "@/components/ui/mac-window"
+import { TerminalWindow } from "@/components/ui/mac-window"
 import { Gradient } from "@polyterm.io/ui"
 
 export default function GradientDemo() {
   return (
-    <MacWindow title="Gradient">
+    <TerminalWindow title="Gradient">
       <TUI style={{ width: "100%", height: 120 }}>
         <box padding={1} flexDirection="column" gap={1}>
           <Gradient name="rainbow">
@@ -20,6 +20,6 @@ export default function GradientDemo() {
           </Gradient>
         </box>
       </TUI>
-    </MacWindow>
+    </TerminalWindow>
   )
 }
