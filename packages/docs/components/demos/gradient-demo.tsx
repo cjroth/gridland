@@ -1,9 +1,9 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { useState } from "react"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
-import { Gradient, GRADIENTS, type GradientName, StatusBar, textStyle, useTheme } from "@polyterm.io/ui"
+import { Gradient, GRADIENTS, type GradientName, StatusBar, textStyle, useTheme } from "@gridland/ui"
 import { useKeyboard } from "@opentui/react"
 import figlet from "figlet"
 // @ts-ignore — importable-fonts has no type declarations
@@ -11,7 +11,7 @@ import ansiShadow from "figlet/importable-fonts/ANSI Shadow.js"
 
 figlet.parseFont("ANSI Shadow", ansiShadow)
 
-const art = figlet.textSync("polyterm", { font: "ANSI Shadow" as any })
+const art = figlet.textSync("gridland", { font: "ANSI Shadow" as any })
 const lines = art.split("\n").filter((l: string) => l.trimEnd().length > 0)
 const gradientNames = Object.keys(GRADIENTS) as GradientName[]
 

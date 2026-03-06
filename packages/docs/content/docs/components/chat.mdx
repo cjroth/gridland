@@ -7,7 +7,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
 import { RunDemo } from '@/components/ui/run-demo'
 import ChatDemo from '@/components/demos/chat-demo'
 
-The `ChatPanel` component from `@polyterm.io/ui` renders a vertical chat interface
+The `ChatPanel` component from `@gridland/ui` renders a vertical chat interface
 with message display, tool call status cards, streaming text, loading indicators, and text input.
 
 <div className="my-8">
@@ -21,22 +21,22 @@ with message display, tool call status cards, streaming text, loading indicators
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add @polyterm.io/ui
+bun add @gridland/ui
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install @polyterm.io/ui
+npm install @gridland/ui
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add @polyterm.io/ui
+yarn add @gridland/ui
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add @polyterm.io/ui
+pnpm add @gridland/ui
 ```
 </Tab>
 </Tabs>
@@ -44,7 +44,7 @@ pnpm add @polyterm.io/ui
 ## Usage
 
 ```tsx title="Example"
-import { ChatPanel } from "@polyterm.io/ui"
+import { ChatPanel } from "@gridland/ui"
 
 <ChatPanel
   messages={[

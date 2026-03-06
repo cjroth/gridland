@@ -1,6 +1,6 @@
 ---
 title: Theming
-description: Customize colors across your Polyterm UI components with built-in themes or your own custom theme.
+description: Customize colors across your Gridland UI components with built-in themes or your own custom theme.
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout'
@@ -8,7 +8,7 @@ import ThemingDemo from '@/components/demos/theming-demo'
 
 ## Overview
 
-Polyterm UI includes a React context-based theming system with semantic color tokens. All components read from the theme by default, and explicit color props always override theme values.
+Gridland UI includes a React context-based theming system with semantic color tokens. All components read from the theme by default, and explicit color props always override theme values.
 
 <Callout type="info">
   Without a `ThemeProvider`, all components fall back to the built-in dark theme — existing code works unchanged.
@@ -23,7 +23,7 @@ Use **←→** arrow keys to switch between dark and light themes. All component
 ## Quick Start
 
 ```tsx title="app.tsx"
-import { ThemeProvider, darkTheme, Spinner, Table } from "@polyterm.io/ui"
+import { ThemeProvider, darkTheme, Spinner, Table } from "@gridland/ui"
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
 Two themes ship out of the box:
 
 ```tsx
-import { darkTheme, lightTheme } from "@polyterm.io/ui"
+import { darkTheme, lightTheme } from "@gridland/ui"
 ```
 
 | Token | Dark | Light |
@@ -60,7 +60,7 @@ import { darkTheme, lightTheme } from "@polyterm.io/ui"
 Create a custom theme by providing an object that satisfies the `Theme` interface:
 
 ```tsx title="my-theme.ts"
-import type { Theme } from "@polyterm.io/ui"
+import type { Theme } from "@gridland/ui"
 
 export const myTheme: Theme = {
   primary: "blue",
@@ -78,7 +78,7 @@ export const myTheme: Theme = {
 Or extend a built-in theme:
 
 ```tsx title="custom-theme.ts"
-import { darkTheme } from "@polyterm.io/ui"
+import { darkTheme } from "@gridland/ui"
 
 export const customTheme = {
   ...darkTheme,
@@ -92,7 +92,7 @@ export const customTheme = {
 Access theme tokens directly in your own components:
 
 ```tsx
-import { useTheme } from "@polyterm.io/ui"
+import { useTheme } from "@gridland/ui"
 
 function MyComponent() {
   const theme = useTheme()

@@ -1,5 +1,5 @@
 "use client"
-import { BadgeButton, TextBadge } from "@polyterm.io/ui"
+import { BadgeButton, TextBadge } from "@gridland/ui"
 
 export default function MadeWithOpentuiDemo() {
   return (

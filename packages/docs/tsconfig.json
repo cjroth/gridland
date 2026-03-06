@@ -30,16 +30,16 @@
         "./.source/*"
       ],
       "opentui-web": [
-        "../polyterm-web/src/index.ts"
+        "../web/src/index.ts"
       ],
-      "@polyterm.io/web": [
-        "../polyterm-web/src/index.ts"
+      "@gridland/web": [
+        "../web/src/index.ts"
       ],
       "opentui-ui": [
-        "../polyterm-ui/components/index.ts"
+        "../ui/components/index.ts"
       ],
-      "@polyterm.io/ui": [
-        "../polyterm-ui/components/index.ts"
+      "@gridland/ui": [
+        "../ui/components/index.ts"
       ]
     }
   },
@@ -50,7 +50,7 @@
     ".source/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "polyterm-jsx.d.ts"
+    "gridland-jsx.d.ts"
   ],
   "exclude": [
     "node_modules"

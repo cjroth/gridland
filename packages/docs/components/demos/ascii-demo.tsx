@@ -1,9 +1,9 @@
-// @ts-nocheck — polyterm intrinsic elements conflict with React's HTML/SVG types
+// @ts-nocheck — gridland intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { useState } from "react"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
-import { StatusBar, textStyle, useTheme } from "@polyterm.io/ui"
+import { StatusBar, textStyle, useTheme } from "@gridland/ui"
 import { useKeyboard } from "@opentui/react"
 import figlet from "figlet"
 // @ts-ignore — importable-fonts has no type declarations
@@ -39,7 +39,7 @@ for (const f of fonts) {
 }
 
 function getLines(fontName: string) {
-  const art = figlet.textSync("polyterm", { font: fontName as any })
+  const art = figlet.textSync("gridland", { font: fontName as any })
   return art.split("\n").filter((l) => l.trimEnd().length > 0)
 }
 

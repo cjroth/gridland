@@ -1,5 +1,5 @@
 {
-  "name": "polyterm-docs",
+  "name": "gridland-docs",
   "private": true,
   "scripts": {
     "dev": "next dev",

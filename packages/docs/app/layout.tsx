@@ -4,8 +4,8 @@ import "./global.css"
 
 export const metadata = {
   title: {
-    template: "%s | Polyterm",
-    default: "Polyterm",
+    template: "%s | Gridland",
+    default: "Gridland",
   },
   description: "Render terminal UIs to HTML5 Canvas with React",
 }

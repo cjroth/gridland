@@ -1,0 +1,75 @@
+---
+title: Made with Gridland
+description: Branding components that link back to the Gridland project
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+
+The `GridlandCornerRibbon`, `GridlandBadgeButton`, and `GridlandTextBadge` components from `@gridland/ui` provide
+branding attribution that links back to the Gridland website.
+
+## Installation
+
+<Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
+<Tab value="bun">
+```bash title="Terminal"
+bun add @gridland/ui
+```
+</Tab>
+<Tab value="npm">
+```bash title="Terminal"
+npm install @gridland/ui
+```
+</Tab>
+<Tab value="yarn">
+```bash title="Terminal"
+yarn add @gridland/ui
+```
+</Tab>
+<Tab value="pnpm">
+```bash title="Terminal"
+pnpm add @gridland/ui
+```
+</Tab>
+</Tabs>
+
+## Import
+
+```tsx title="Import"
+import { GridlandCornerRibbon, GridlandBadgeButton, GridlandTextBadge } from "@gridland/ui"
+```
+
+## Usage
+
+```tsx title="GridlandCornerRibbon"
+<GridlandCornerRibbon position="top-right" />
+```
+
+```tsx title="GridlandBadgeButton"
+<GridlandBadgeButton variant="dark" />
+```
+
+```tsx title="GridlandTextBadge"
+<GridlandTextBadge />
+```
+
+## GridlandCornerRibbon Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `"top-right" \| "top-left" \| "bottom-right" \| "bottom-left"` | `"top-right"` | Corner position |
+| `className` | `string` | `undefined` | Additional CSS classes on the ribbon link |
+| `absolute` | `boolean` | `false` | Use absolute instead of fixed positioning |
+
+## GridlandBadgeButton Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"dark" \| "light" \| "outline"` | `"dark"` | Visual style variant |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## GridlandTextBadge Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | `undefined` | Additional CSS classes |

@@ -1,6 +1,6 @@
 ---
 title: Next.js
-description: Use Polyterm with Next.js
+description: Use Gridland with Next.js
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
@@ -15,22 +15,22 @@ import { Callout } from 'fumadocs-ui/components/callout'
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add @polyterm.io/web
+bun add @gridland/web
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install @polyterm.io/web
+npm install @gridland/web
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add @polyterm.io/web
+yarn add @gridland/web
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add @polyterm.io/web
+pnpm add @gridland/web
 ```
 </Tab>
 </Tabs>
@@ -40,17 +40,17 @@ pnpm add @polyterm.io/web
 
 ## Configure Next.js
 
-Use the `withPolyterm` plugin to configure webpack automatically:
+Use the `withGridland` plugin to configure webpack automatically:
 
 ```ts title="next.config.ts"
-import { withPolyterm } from "@polyterm.io/web/next-plugin"
+import { withGridland } from "@gridland/web/next-plugin"
 
-export default withPolyterm({
+export default withGridland({
   // ... other Next.js config
 })
 ```
 
-If you provide your own `webpack` function, `withPolyterm` will chain it —
+If you provide your own `webpack` function, `withGridland` will chain it —
 your config runs first, then opentui aliases and shims are applied on top.
 
 </Step>
@@ -63,9 +63,9 @@ Mark your page as a client component and use `TUI`:
 ```tsx title="app/page.tsx"
 "use client"
 
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 
-function PolytermDemo() {
+function GridlandDemo() {
   return (
     <box border borderStyle="rounded" padding={1}>
       <text fg="#a3be8c">Hello from Next.js!</text>
@@ -76,7 +76,7 @@ function PolytermDemo() {
 export default function Home() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <PolytermDemo />
+      <GridlandDemo />
     </TUI>
   )
 }

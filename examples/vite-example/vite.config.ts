@@ -1,10 +1,10 @@
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
-import { polytermWebPlugin } from "../../packages/polyterm-web/src/vite-plugin"
+import { gridlandWebPlugin } from "../../packages/web/src/vite-plugin"
 
 export default defineConfig({
   plugins: [
-    ...polytermWebPlugin(),
+    ...gridlandWebPlugin(),
     react(),
   ],
   build: {

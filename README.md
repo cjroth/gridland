@@ -1,6 +1,6 @@
-# Polyterm
+# Gridland
 
-Polyterm renders [opentui](https://github.com/nicosalm/opentui) React apps directly in the browser using HTML5 `<canvas>`, bypassing any terminal emulator. Polyterm is built on the opentui engine.
+Gridland renders [opentui](https://github.com/nicosalm/opentui) React apps directly in the browser using HTML5 `<canvas>`, bypassing any terminal emulator. Gridland is built on the opentui engine.
 
 ![Screenshot](screenshot.png)
 
@@ -28,8 +28,8 @@ The key insight: OpenTUI renderables never call Zig directly. They call `Optimiz
 ## Getting started
 
 ```bash
-git clone --recurse-submodules https://github.com/<org>/polyterm.git
-cd polyterm
+git clone --recurse-submodules https://github.com/<org>/gridland.git
+cd gridland
 bun setup
 ```
 
@@ -63,12 +63,12 @@ bun run build
 ```
 opentui/                     # Git submodule — opentui engine source
 packages/
-  polyterm-web/              # Core browser runtime (npm: @polyterm.io/web)
+  web/              # Core browser runtime (npm: @gridland/web)
     src/
       index.ts               # Main exports (bundled mode)
       core.ts                # Core exports (external mode for Vite plugin users)
       TUI.tsx                # Single React component — THE mounting layer
-      mount.ts               # Imperative mount API: mountPolyterm(canvas, element)
+      mount.ts               # Imperative mount API: mountGridland(canvas, element)
       browser-buffer.ts
       browser-text-buffer.ts
       browser-text-buffer-view.ts
@@ -84,10 +84,10 @@ packages/
       shims/                 # Node.js built-in stubs
     __tests__/               # Unit + integration tests
 
-  polyterm-ui/               # UI component library (npm: @polyterm.io/ui)
+  ui/               # UI component library (npm: @gridland/ui)
     components/              # Components with tests
 
-  polyterm-testing/           # Testing utilities (npm: @polyterm.io/testing)
+  testing/           # Testing utilities (npm: @gridland/testing)
     src/
 
 examples/

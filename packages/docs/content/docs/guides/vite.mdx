@@ -1,6 +1,6 @@
 ---
 title: Vite
-description: Use Polyterm with Vite
+description: Use Gridland with Vite
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
@@ -15,22 +15,22 @@ import { Callout } from 'fumadocs-ui/components/callout'
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add @polyterm.io/web
+bun add @gridland/web
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install @polyterm.io/web
+npm install @gridland/web
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add @polyterm.io/web
+yarn add @gridland/web
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add @polyterm.io/web
+pnpm add @gridland/web
 ```
 </Tab>
 </Tabs>
@@ -40,18 +40,18 @@ pnpm add @polyterm.io/web
 
 ## Configure the Vite Plugin
 
-Polyterm provides a Vite plugin that handles module resolution for the
+Gridland provides a Vite plugin that handles module resolution for the
 underlying opentui engine. Add it to your `vite.config.ts`:
 
 ```ts title="vite.config.ts"
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
-import { polytermWebPlugin } from "@polyterm.io/web/vite-plugin"
+import { gridlandWebPlugin } from "@gridland/web/vite-plugin"
 
 export default defineConfig({
   plugins: [
     react(),
-    ...polytermWebPlugin(),
+    ...gridlandWebPlugin(),
   ],
 })
 ```
@@ -64,9 +64,9 @@ export default defineConfig({
 Wrap your TUI content in `TUI`:
 
 ```tsx title="App.tsx"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 
-function PolytermDemo() {
+function GridlandDemo() {
   return (
     <box flexDirection="column" padding={1}>
       <box border borderStyle="rounded" borderColor="#88c0d0" padding={1}>
@@ -79,7 +79,7 @@ function PolytermDemo() {
 export default function App() {
   return (
     <TUI style={{ width: "100vw", height: "100vh" }}>
-      <PolytermDemo />
+      <GridlandDemo />
     </TUI>
   )
 }

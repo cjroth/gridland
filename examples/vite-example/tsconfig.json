@@ -9,10 +9,10 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "paths": {
-      "@opentui/core": ["../../packages/polyterm-web/src/core-shims/index.ts"],
+      "@opentui/core": ["../../packages/web/src/core-shims/index.ts"],
       "@opentui/react": ["../../../../opentui/packages/react/src/index.ts"],
       "@opentui/ui": ["../../../../opentui/packages/ui/src/index.ts"]
     }
   },
-  "include": ["src", "polyterm-jsx.d.ts"]
+  "include": ["src", "gridland-jsx.d.ts"]
 }

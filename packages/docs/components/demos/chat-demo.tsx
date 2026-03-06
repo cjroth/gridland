@@ -1,10 +1,10 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVX types
 "use client"
 import { useState, useCallback, useRef } from "react"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
-import { ChatPanel } from "@polyterm.io/ui"
-import type { ChatMessage, ToolCallInfo } from "@polyterm.io/ui"
+import { ChatPanel } from "@gridland/ui"
+import type { ChatMessage, ToolCallInfo } from "@gridland/ui"
 import { useKeyboard } from "@opentui/react"
 
 const initialMessages: ChatMessage[] = [

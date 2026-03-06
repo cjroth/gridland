@@ -1,4 +1,4 @@
-# Polyterm Monorepo Plan
+# Gridland Monorepo Plan
 
 ## Overview
 

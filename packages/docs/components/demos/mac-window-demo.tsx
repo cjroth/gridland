@@ -1,7 +1,7 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
-import { TUI } from "@polyterm.io/web"
-import { TerminalWindow, textStyle, useTheme } from "@polyterm.io/ui"
+import { TUI } from "@gridland/web"
+import { TerminalWindow, textStyle, useTheme } from "@gridland/ui"
 
 function TerminalApp() {
   const theme = useTheme()

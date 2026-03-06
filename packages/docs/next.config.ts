@@ -5,7 +5,7 @@ import path from "path"
 const withMDX = createMDX()
 
 const opentui = path.resolve(__dirname, "../../opentui")
-const pkgRoot = path.resolve(__dirname, "../polyterm-web")
+const pkgRoot = path.resolve(__dirname, "../web")
 
 function shimPath(p: string) {
   return path.resolve(pkgRoot, p)
@@ -30,7 +30,7 @@ const coreFileShims: Record<string, string> = {
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   typescript: {
-    // Source imports from @polyterm.io/ui and @polyterm.io/web use custom JSX intrinsics
+    // Source imports from @gridland/ui and @gridland/web use custom JSX intrinsics
     // (box, text, span) that conflict with React's HTML/SVG types.
     // Type safety is enforced in those packages' own builds.
     ignoreBuildErrors: true,
@@ -42,9 +42,9 @@ const nextConfig: NextConfig = {
       "@opentui/react": path.resolve(opentui, "packages/react/src/index.ts"),
       // Convenience aliases for docs imports
       "opentui-web": path.resolve(pkgRoot, "src/index.ts"),
-      "@polyterm.io/web": path.resolve(pkgRoot, "src/index.ts"),
-      "opentui-ui": path.resolve(__dirname, "../polyterm-ui/components/index.ts"),
-      "@polyterm.io/ui": path.resolve(__dirname, "../polyterm-ui/components/index.ts"),
+      "@gridland/web": path.resolve(pkgRoot, "src/index.ts"),
+      "opentui-ui": path.resolve(__dirname, "../ui/components/index.ts"),
+      "@gridland/ui": path.resolve(__dirname, "../ui/components/index.ts"),
 
       // FFI shims
       "bun:ffi": shimPath("src/shims/bun-ffi.ts"),

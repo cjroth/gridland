@@ -26,8 +26,8 @@ trap 'rm -rf "$WORK_DIR"' EXIT
 
 echo "Setting up demo..."
 
-git clone --depth 1 -q https://github.com/cjroth/polyterm.git "$WORK_DIR/polyterm"
-cd "$WORK_DIR/polyterm"
+git clone --depth 1 -q https://github.com/cjroth/gridland.git "$WORK_DIR/gridland"
+cd "$WORK_DIR/gridland"
 bun install 2>/dev/null
 
 echo "Running $DEMO_NAME demo..."

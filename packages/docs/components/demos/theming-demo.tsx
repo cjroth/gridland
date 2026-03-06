@@ -1,7 +1,7 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { useState } from "react"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
 import {
   ThemeProvider,
@@ -12,7 +12,7 @@ import {
   MultiSelect,
   StatusBar,
   textStyle,
-} from "@polyterm.io/ui"
+} from "@gridland/ui"
 import { useKeyboard } from "@opentui/react"
 
 const themes = [

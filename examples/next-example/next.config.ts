@@ -1,3 +1,3 @@
-import { withPolyterm } from "@polyterm.io/web/next-plugin"
+import { withGridland } from "@gridland/web/next-plugin"
 
-export default withPolyterm()
+export default withGridland()

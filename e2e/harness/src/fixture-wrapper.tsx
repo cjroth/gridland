@@ -1,11 +1,11 @@
-// @ts-nocheck — Polyterm intrinsic elements conflict with React's HTML/SVG types
+// @ts-nocheck — Gridland intrinsic elements conflict with React's HTML/SVG types
 import { type ReactNode, useCallback } from "react"
-import { TUI } from "../../../packages/polyterm-web/src/TUI"
-import type { BrowserRenderer } from "../../../packages/polyterm-web/src/browser-renderer"
+import { TUI } from "../../../packages/web/src/TUI"
+import type { BrowserRenderer } from "../../../packages/web/src/browser-renderer"
 
 declare global {
   interface Window {
-    __polyterm__: {
+    __gridland__: {
       renderer: BrowserRenderer
       getBufferText: () => string
       getCellAt: (col: number, row: number) => {
@@ -29,7 +29,7 @@ export function FixtureWrapper({ cols, rows, children, fontSize = 14 }: FixtureW
   const handleReady = useCallback((renderer: BrowserRenderer) => {
     const buffer = renderer.buffer
 
-    window.__polyterm__ = {
+    window.__gridland__ = {
       renderer,
       getBufferText() {
         const lines: string[] = []
@@ -72,7 +72,7 @@ export function FixtureWrapper({ cols, rows, children, fontSize = 14 }: FixtureW
       },
     }
 
-    document.body.setAttribute("data-polyterm-ready", "true")
+    document.body.setAttribute("data-gridland-ready", "true")
   }, [])
 
   // Calculate pixel dimensions from cell count

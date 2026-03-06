@@ -1,10 +1,10 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
 import { useState } from "react"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { useKeyboard } from "@opentui/react"
 import { TerminalWindow } from "@/components/ui/mac-window"
-import { Link, StatusBar, textStyle, type UnderlineStyle } from "@polyterm.io/ui"
+import { Link, StatusBar, textStyle, type UnderlineStyle } from "@gridland/ui"
 
 const MODES: UnderlineStyle[] = ["solid", "dashed", "dotted", "none"]
 

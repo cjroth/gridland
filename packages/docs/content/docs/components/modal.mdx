@@ -7,7 +7,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
 import { RunDemo } from '@/components/ui/run-demo'
 import ModalDemo from '@/components/demos/modal-demo'
 
-The `Modal` component from `@polyterm.io/ui` renders a bordered container that overlays
+The `Modal` component from `@gridland/ui` renders a bordered container that overlays
 content, optionally displays a title, and listens for the Escape key to trigger a close callback.
 
 <div className="my-8">
@@ -21,22 +21,22 @@ content, optionally displays a title, and listens for the Escape key to trigger 
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add @polyterm.io/ui
+bun add @gridland/ui
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install @polyterm.io/ui
+npm install @gridland/ui
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add @polyterm.io/ui
+yarn add @gridland/ui
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add @polyterm.io/ui
+pnpm add @gridland/ui
 ```
 </Tab>
 </Tabs>
@@ -44,7 +44,7 @@ pnpm add @polyterm.io/ui
 ## Usage
 
 ```tsx title="Example"
-import { Modal } from "@polyterm.io/ui"
+import { Modal } from "@gridland/ui"
 
 <Modal title="Settings" borderColor="blue" onClose={() => setOpen(false)}>
   <text>Modal content here</text>

@@ -1,8 +1,8 @@
 // @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types
 "use client"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
-import { Spinner } from "@polyterm.io/ui"
+import { Spinner } from "@gridland/ui"
 
 export default function SpinnerDemo() {
   return (

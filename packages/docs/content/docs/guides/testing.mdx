@@ -1,6 +1,6 @@
 ---
 title: Testing
-description: Test Polyterm components with @polyterm.io/testing
+description: Test Gridland components with @gridland/testing
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
@@ -11,22 +11,22 @@ import { Callout } from 'fumadocs-ui/components/callout'
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add -D @polyterm.io/testing
+bun add -D @gridland/testing
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install --save-dev @polyterm.io/testing
+npm install --save-dev @gridland/testing
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add -D @polyterm.io/testing
+yarn add -D @gridland/testing
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add -D @polyterm.io/testing
+pnpm add -D @gridland/testing
 ```
 </Tab>
 </Tabs>
@@ -37,7 +37,7 @@ The `createScreen` function renders your component to a virtual buffer that you
 can inspect:
 
 ```ts title="example.test.ts"
-import { createScreen } from "@polyterm.io/testing"
+import { createScreen } from "@gridland/testing"
 
 const screen = await createScreen(
   <box border padding={1}>
@@ -62,7 +62,7 @@ expect(match.row).toBeGreaterThan(0)
 Send keystrokes to test interactive components:
 
 ```ts title="input.test.ts"
-import { createScreen, keys } from "@polyterm.io/testing"
+import { createScreen, keys } from "@gridland/testing"
 
 const screen = await createScreen(<MyInputComponent />, {
   cols: 40,
@@ -90,7 +90,7 @@ screen.sendKeys(keys.enter)
 Use `waitFor` to wait for async state changes:
 
 ```ts title="async.test.ts"
-import { createScreen, waitFor } from "@polyterm.io/testing"
+import { createScreen, waitFor } from "@gridland/testing"
 
 const screen = await createScreen(<AsyncComponent />)
 
@@ -110,15 +110,15 @@ expect(output).toMatchSnapshot()
 
 ## Test Runner Compatibility
 
-`@polyterm.io/testing` works with any test runner that supports ESM:
+`@gridland/testing` works with any test runner that supports ESM:
 
-- **Bun** — Recommended, used in the Polyterm test suite
+- **Bun** — Recommended, used in the Gridland test suite
 - **Vitest** — Works with proper module resolution
 - **Jest** — Works with ESM transforms configured
 
 <Callout type="info">
-Bun is the recommended test runner for Polyterm projects. It has native ESM
-support and is used for the Polyterm test suite itself.
+Bun is the recommended test runner for Gridland projects. It has native ESM
+support and is used for the Gridland test suite itself.
 </Callout>
 
 ## Tips

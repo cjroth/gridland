@@ -1,0 +1,11 @@
+{
+  "name": "@gridland/demo",
+  "version": "0.1.0",
+  "description": "Run gridland component demos from anywhere",
+  "bin": {
+    "gridland-demo": "./bin/cli.mjs"
+  },
+  "files": ["bin"],
+  "keywords": ["gridland", "tui", "terminal", "demo"],
+  "license": "MIT"
+}

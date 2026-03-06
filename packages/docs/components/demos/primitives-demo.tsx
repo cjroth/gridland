@@ -1,6 +1,6 @@
 // @ts-nocheck — OpenTUI intrinsic elements (box, text) conflict with React's HTML/SVG types
 "use client"
-import { TUI } from "@polyterm.io/web"
+import { TUI } from "@gridland/web"
 import { TerminalWindow } from "@/components/ui/mac-window"
 
 export default function PrimitivesDemo() {
