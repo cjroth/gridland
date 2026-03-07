@@ -87,4 +87,15 @@ export default defineConfig([
     target: "esnext",
     platform: "neutral",
   },
+  // Headless rendering (Node.js — SSR, llms.txt, text extraction)
+  {
+    entry: { headless: "src/headless.ts" },
+    format: ["esm"],
+    dts: true,
+    sourcemap: true,
+    external: ["react", "react-dom", "events"],
+    esbuildPlugins: [externalOpentui],
+    target: "node18",
+    platform: "node",
+  },
 ])
