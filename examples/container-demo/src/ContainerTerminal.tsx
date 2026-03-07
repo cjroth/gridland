@@ -237,8 +237,9 @@ async function loadContainer(terminal: Terminal, inputBuffer: number[]): Promise
         if (inputBuffer.length > 0) {
           return inputBuffer.shift()!
         }
-        // Return null — TTY layer throws EAGAIN, TinyEMU retries via its main loop
-        return null
+        // Return undefined — TTY layer throws EAGAIN (errno 6), telling
+        // TinyEMU "no data right now, try again". null would mean EOF.
+        return undefined
       }
     }],
   }
