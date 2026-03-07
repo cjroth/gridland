@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react"
 import { Terminal } from "@xterm/headless"
 import { useXtermBuffer } from "./use-xterm-buffer"
 import { keyEventToSequence } from "./keyboard-handler"
+import { startNetworkStack } from "./network/stack"
 import type { BrowserRenderer } from "../../../packages/web/src/browser-renderer"
 
 type Status = "loading" | "booting" | "ready" | "error"
@@ -155,6 +156,12 @@ export function ContainerTerminal({ rendererRef }: ContainerTerminalProps) {
   )
 }
 
+function genmac(): string {
+  return "02:XX:XX:XX:XX:XX".replace(/X/g, () => {
+    return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16))
+  })
+}
+
 /**
  * Loads the c2w emscripten module and hooks its stdio into the headless xterm terminal.
  *
@@ -184,6 +191,29 @@ async function loadContainer(terminal: Terminal, inputBuffer: number[]): Promise
     }
   }
 
+  // Start network stack and wait for TLS certificate before booting container.
+  // Use a timeout so the container boots even if networking setup hangs.
+  const wasmImageUrl = location.origin + "/c2w/c2w-net-proxy.wasm.gzip"
+  let cert: Uint8Array | null = null
+  try {
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Network stack timed out after 30s")), 30000),
+    )
+    cert = await Promise.race([startNetworkStack(wasmImageUrl), timeout])
+    console.log("[container] Network stack ready, cert received:", cert.byteLength, "bytes")
+  } catch (err) {
+    console.warn("[container] Network stack failed, booting without networking:", err)
+  }
+
+  // TinyEMU's c2w fork handles /pack/info internally via FSVirtFile.
+  // We pass -net socket to create the virtio-net device and -mac for the MAC address.
+  // TinyEMU writes n: and t: lines to the info file automatically.
+  const mac = cert ? genmac() : undefined
+  const moduleArgs: string[] = []
+  if (cert) {
+    moduleArgs.push("-net", "socket", "-mac", mac!)
+  }
+
   // Set up Module global before loading the script.
   //
   // Important: Do NOT set Module.stdin. When Module.stdin is set, emscripten
@@ -199,6 +229,8 @@ async function loadContainer(terminal: Terminal, inputBuffer: number[]): Promise
   // We DO set Module.stdout/stderr to capture byte-level output from TinyEMU.
   const Module: any = {
     noInitialRun: false,
+    arguments: moduleArgs,
+    websocket: cert ? { url: "http://localhost:9999/" } : undefined,
     stdout: (charCode: number) => {
       outputBuffer.push(charCode)
       scheduleFlush()
@@ -216,32 +248,17 @@ async function loadContainer(terminal: Terminal, inputBuffer: number[]): Promise
     locateFile: (path: string) => {
       return "/c2w/" + path
     },
-    preRun: [function () {
-      // Patch TTY.default_tty_ops.get_char to feed from our inputBuffer.
-      // The default implementation calls window.prompt() in the browser.
-      // We return null when no input is available — the TTY layer converts
-      // this to EAGAIN (errno 6), and TinyEMU's emscripten_sleep-based
-      // main loop will retry later. We can NOT use Asyncify.handleSleep
-      // here because fd_read is called during emscripten_sleep rewinds,
-      // and Asyncify doesn't support nested async operations.
-      const TTY = Module.TTY
-      if (!TTY) {
-        console.warn("[container] TTY not available in preRun")
-        return
-      }
-
-      TTY.default_tty_ops.get_char = function (tty: any) {
-        if (tty.input && tty.input.length) {
-          return tty.input.shift()
+    preRun: [
+      // Write cert file to emscripten FS root (served via wasi0 9p mount)
+      function (mod: any) {
+        if (cert) {
+          const FS = mod.FS
+          try { FS.mkdir("/.wasmenv") } catch (_e) { /* may exist */ }
+          FS.writeFile("/.wasmenv/proxy.crt", cert)
+          console.log("[container] Wrote cert to /.wasmenv/proxy.crt")
         }
-        if (inputBuffer.length > 0) {
-          return inputBuffer.shift()!
-        }
-        // Return undefined — TTY layer throws EAGAIN (errno 6), telling
-        // TinyEMU "no data right now, try again". null would mean EOF.
-        return undefined
-      }
-    }],
+      },
+    ],
   }
 
   ;(window as any).Module = Module
@@ -252,8 +269,32 @@ async function loadContainer(terminal: Terminal, inputBuffer: number[]): Promise
   ;(window as any).__originalPrompt = window.prompt
   window.prompt = () => null
 
-  // Load out.js as a script (it reads/modifies the global Module)
+  // Load out.js as a script. It runs synchronously, pushes runWithFS to
+  // Module.preRun (after our /pack/info write), and calls run().
+  // preRun() processes all callbacks: our info write runs first, then
+  // runWithFS starts the data file download and adds a run dependency.
+  // run() returns early. When data files finish loading, run() resumes.
   await loadScript("/c2w/out.js")
+
+  // Push TTY patch after out.js loads — it runs when run() resumes
+  // after data files finish loading.
+  Module.preRun.push(function (mod: any) {
+    const TTY = mod.TTY
+    if (!TTY) {
+      console.warn("[container] TTY not available in preRun")
+      return
+    }
+
+    TTY.default_tty_ops.get_char = function (tty: any) {
+      if (tty.input && tty.input.length) {
+        return tty.input.shift()
+      }
+      if (inputBuffer.length > 0) {
+        return inputBuffer.shift()!
+      }
+      return undefined
+    }
+  })
 }
 
 function loadScript(src: string): Promise<void> {

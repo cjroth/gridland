@@ -28,5 +28,18 @@ Object.defineProperty(Module, "Asyncify", { value: Asyncify, writable: true, con
 // --- end patch ---\
 ' "$OUT_DIR/out.js"
 
+# Download c2w-net-proxy.wasm for browser networking
+C2W_NET_PROXY_VERSION="v0.5.0"
+if [ ! -f "$OUT_DIR/c2w-net-proxy.wasm.gzip" ]; then
+  echo "Downloading c2w-net-proxy.wasm ($C2W_NET_PROXY_VERSION)..."
+  curl -L -o "$OUT_DIR/c2w-net-proxy.wasm" \
+    "https://github.com/ktock/container2wasm/releases/download/${C2W_NET_PROXY_VERSION}/c2w-net-proxy.wasm"
+  gzip -c "$OUT_DIR/c2w-net-proxy.wasm" > "$OUT_DIR/c2w-net-proxy.wasm.gzip"
+  rm "$OUT_DIR/c2w-net-proxy.wasm"
+  echo "c2w-net-proxy.wasm downloaded and compressed."
+else
+  echo "c2w-net-proxy.wasm.gzip already exists, skipping download."
+fi
+
 echo "Done! Container WASM files are in $OUT_DIR/"
 echo "You can now run: bun run dev"

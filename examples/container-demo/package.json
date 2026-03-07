@@ -8,10 +8,15 @@
     "preview": "vite preview",
     "build-container": "bash scripts/build-container.sh"
   },
+  "msw": {
+    "workerDirectory": ["./public"]
+  },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@xterm/headless": "^5.5.0"
+    "@xterm/headless": "^5.5.0",
+    "msw": "^2.6.8",
+    "@bjorn3/browser_wasi_shim": "^0.2.17"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
