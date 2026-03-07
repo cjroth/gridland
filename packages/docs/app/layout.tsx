@@ -8,7 +8,7 @@ export const metadata = {
     template: "%s | Gridland",
     default: "Gridland",
   },
-  description: "Render terminal UIs to HTML5 Canvas with React",
+  description: "A framework for building terminal apps, built on OpenTUI + React.",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

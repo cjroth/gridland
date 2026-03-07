@@ -29,7 +29,12 @@ export default async function Page(props: {
 }
 
 export async function generateStaticParams() {
-  return source.generateParams()
+  const params = source.generateParams()
+  // Ensure the index route (empty slug) is included for static export
+  if (!params.some((p) => p.slug.length === 0)) {
+    params.push({ slug: [] })
+  }
+  return params
 }
 
 export async function generateMetadata(props: {
