@@ -16,7 +16,7 @@ function TerminalApp() {
 
 export default function TerminalWindowDemo() {
   return (
-    <DemoWindow title="TerminalWindow" tuiStyle={{ width: "100%", height: 120 }}>
+    <DemoWindow title="Terminal" tuiStyle={{ width: "100%", height: 120 }}>
       <TerminalApp />
     </DemoWindow>
   )

@@ -8,10 +8,10 @@ import {
   createHeadlessRoot,
 } from "@gridland/web"
 import { RootRenderable } from "@opentui/core"
+import { TerminalWindow } from "@/components/ui/mac-window"
 
-function cn(...classes: (string | undefined | false)[]) {
-  return classes.filter(Boolean).join(" ")
-}
+// One-time global setup
+setHeadlessRootRenderableClass(RootRenderable)
 
 export interface DemoWindowProps {
   title?: string
@@ -30,13 +30,12 @@ export function DemoWindow({
   rows = 24,
   children,
 }: DemoWindowProps) {
-  const [mode, setMode] = useState<"browser" | "agent">("browser")
+  const [mode, setMode] = useState<"browser" | "ssr">("browser")
   const [asciiText, setAsciiText] = useState<string | null>(null)
   const asciiGeneratedRef = useRef(false)
 
-  const switchToAgent = () => {
+  const switchToSSR = () => {
     if (!asciiGeneratedRef.current) {
-      setHeadlessRootRenderableClass(RootRenderable)
       const renderer = new HeadlessRenderer({ cols, rows })
       const root = createHeadlessRoot(renderer)
       const text = root.renderToText(children)
@@ -44,85 +43,59 @@ export function DemoWindow({
       setAsciiText(text)
       asciiGeneratedRef.current = true
     }
-    setMode("agent")
+    setMode("ssr")
   }
 
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border shadow-lg overflow-hidden",
-        className
-      )}
-      style={{ backgroundColor: "#1e1e2e" }}
-    >
-      {/* Title Bar */}
+  const titleBarRight = (
+    <div className="flex justify-end">
       <div
-        className="grid grid-cols-3 items-center px-3 py-2.5 border-b"
-        style={{ backgroundColor: "#2a2a3c", borderColor: "#313244" }}
+        className="inline-flex rounded-md overflow-hidden"
+        style={{ border: "1px solid #313244" }}
       >
-        {/* Traffic Lights */}
-        <div className="flex gap-2">
-          <div className="w-3 h-3 bg-red-500 rounded-full" />
-          <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-          <div className="w-3 h-3 bg-green-500 rounded-full" />
-        </div>
-        {/* Title */}
-        {title && (
-          <div
-            className="text-center text-sm select-none"
-            style={{ color: "#a6adc8" }}
-          >
-            {title}
-          </div>
-        )}
-        {/* Toggle */}
-        <div className="flex justify-end">
-          <div
-            className="inline-flex rounded-md overflow-hidden"
-            style={{ border: "1px solid #313244" }}
-          >
-            <button
-              type="button"
-              className="text-xs px-2 py-0.5 transition-colors cursor-pointer hover:opacity-80"
-              style={{
-                backgroundColor:
-                  mode === "browser" ? "#3a3a4c" : "transparent",
-                color: mode === "browser" ? "#cdd6f4" : "#6c7086",
-                borderRight: "1px solid #313244",
-              }}
-              onClick={() => setMode("browser")}
-            >
-              Browser
-            </button>
-            <button
-              type="button"
-              className="text-xs px-2 py-0.5 transition-colors cursor-pointer hover:opacity-80"
-              style={{
-                backgroundColor:
-                  mode === "agent" ? "#3a3a4c" : "transparent",
-                color: mode === "agent" ? "#cdd6f4" : "#6c7086",
-              }}
-              onClick={switchToAgent}
-            >
-              SSR
-            </button>
-          </div>
-          <a
-            href="/docs/guides/ssr-for-agents"
-            title="SSR for Agents"
-            className="ml-1.5 inline-flex items-center justify-center rounded-full text-xs px-1.5 py-0.5 transition-colors"
-            style={{ color: "#6c7086", border: "1px solid #313244", textDecoration: "none" }}
-          >
-            ?
-          </a>
-        </div>
+        <button
+          type="button"
+          className="text-xs px-2 py-0.5 transition-colors cursor-pointer hover:opacity-80"
+          style={{
+            backgroundColor:
+              mode === "browser" ? "#3a3a4c" : "transparent",
+            color: mode === "browser" ? "#cdd6f4" : "#6c7086",
+            borderRight: "1px solid #313244",
+          }}
+          onClick={() => setMode("browser")}
+        >
+          Browser
+        </button>
+        <button
+          type="button"
+          className="text-xs px-2 py-0.5 transition-colors cursor-pointer hover:opacity-80"
+          style={{
+            backgroundColor:
+              mode === "ssr" ? "#3a3a4c" : "transparent",
+            color: mode === "ssr" ? "#cdd6f4" : "#6c7086",
+          }}
+          onClick={switchToSSR}
+        >
+          SSR
+        </button>
       </div>
-      {/* Content */}
+      <a
+        href="/docs/guides/ssr-for-agents"
+        title="SSR for Agents"
+        className="ml-1.5 inline-flex items-center justify-center rounded-full text-xs px-1.5 py-0.5 transition-colors"
+        style={{ color: "#6c7086", border: "1px solid #313244", textDecoration: "none" }}
+      >
+        ?
+      </a>
+    </div>
+  )
+
+  return (
+    <TerminalWindow title={title} className={className} titleBarRight={titleBarRight}>
       <div className="overflow-x-auto overscroll-x-none">
         <div style={{ display: mode === "browser" ? "block" : "none" }}>
           <TUI style={tuiStyle}>{children}</TUI>
         </div>
-        {mode === "agent" && asciiText != null && (
+        {mode === "ssr" && asciiText != null && (
           <pre
             style={{
               margin: 0,
@@ -141,6 +114,6 @@ export function DemoWindow({
           </pre>
         )}
       </div>
-    </div>
+    </TerminalWindow>
   )
 }
