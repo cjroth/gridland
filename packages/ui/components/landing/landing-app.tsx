@@ -2,10 +2,11 @@
 import { useState } from "react"
 import { StatusBar } from "../status-bar/status-bar"
 import { useBreakpoints } from "../breakpoints/use-breakpoints"
+import { useTheme } from "../theme/index"
 import { Logo } from "./logo"
 import { InstallBox } from "./install-box"
 import { LinksBox } from "./links-box"
-import { MatrixRain } from "./matrix-rain"
+import { MatrixBackground } from "./matrix-background"
 import { AboutModal } from "./about-modal"
 
 interface LandingAppProps {
@@ -13,6 +14,7 @@ interface LandingAppProps {
 }
 
 export function LandingApp({ useKeyboard }: LandingAppProps) {
+  const theme = useTheme()
   const { width, height, isNarrow, isTiny, isMobile } = useBreakpoints()
   const [showAbout, setShowAbout] = useState(false)
 
@@ -21,10 +23,6 @@ export function LandingApp({ useKeyboard }: LandingAppProps) {
       setShowAbout(true)
     }
   })
-
-  // Reserve space for logo (~7 lines), install/links (~3 lines), statusbar (1 line), padding/gaps (~6 lines)
-  const gameHeight = Math.max(4, height - (isTiny ? 10 : isNarrow ? 14 : 16))
-  const gameWidth = Math.max(8, width - 4) // account for border + padding
 
   if (showAbout) {
     return (
@@ -38,22 +36,40 @@ export function LandingApp({ useKeyboard }: LandingAppProps) {
   }
 
   return (
-    <box flexDirection="column" width="100%" height="100%">
-      <box flexGrow={1} flexDirection="column" paddingTop={3} paddingLeft={1} paddingRight={1} paddingBottom={1} gap={isMobile ? 0 : 1}>
-        <box flexShrink={0}>
-          <Logo compact={isTiny} narrow={isNarrow} mobile={isMobile} />
+    <box width="100%" height="100%" position="relative">
+      <MatrixBackground width={width} height={height} />
+      <box
+        position="absolute"
+        top={0}
+        left={0}
+        width="100%"
+        height="100%"
+        zIndex={1}
+        flexDirection="column"
+        shouldFill={false}
+      >
+        <box flexGrow={1} flexDirection="column" paddingTop={3} paddingLeft={1} paddingRight={1} paddingBottom={1} gap={isMobile ? 0 : 1} shouldFill={false}>
+          <box flexShrink={0} shouldFill={false}>
+            <Logo compact={isTiny} narrow={isNarrow} mobile={isMobile} />
+          </box>
+          <box flexDirection={isNarrow ? "column" : "row"} gap={isMobile ? 0 : 1} flexShrink={0} shouldFill={false}>
+            <InstallBox />
+            <LinksBox />
+          </box>
+          <box
+            flexGrow={1}
+            border
+            borderStyle="rounded"
+            borderColor={theme.border}
+            shouldFill={false}
+          />
         </box>
-        <box flexDirection={isNarrow ? "column" : "row"} gap={isMobile ? 0 : 1} flexShrink={0}>
-          <InstallBox />
-          <LinksBox />
-        </box>
-        <MatrixRain width={gameWidth} height={gameHeight} />
+        <StatusBar
+          items={[
+            { key: "a", label: "about" },
+          ]}
+        />
       </box>
-      <StatusBar
-        items={[
-          { key: "a", label: "about" },
-        ]}
-      />
     </box>
   )
 }

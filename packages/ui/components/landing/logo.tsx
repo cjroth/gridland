@@ -44,7 +44,9 @@ function useAnimation(duration = 1000) {
   return progress
 }
 
-/** Renders text with gradient colors, revealing characters left-to-right */
+/** Renders text with gradient colors, revealing characters left-to-right.
+ *  Non-space characters are rendered as positioned runs so that space gaps
+ *  are truly empty (allowing a background layer to show through). */
 function RevealGradient({ children, revealCol }: { children: string; revealCol: number }) {
   const gradientColors = GRADIENTS.instagram
   const lines = children.split("\n")
@@ -55,23 +57,52 @@ function RevealGradient({ children, revealCol }: { children: string; revealCol: 
   const hexColors = generateGradient(gradientColors, maxLength)
 
   return (
-    <>
-      {lines.map((line, lineIndex) => (
-        <text key={lineIndex}>
-          {line.split("").map((char, charIndex) => {
-            const revealed = charIndex <= revealCol
-            return (
-              <span
-                key={charIndex}
-                style={{ fg: revealed ? hexColors[charIndex] : undefined }}
-              >
-                {revealed ? char : " "}
-              </span>
-            )
-          })}
-        </text>
-      ))}
-    </>
+    <box position="relative" width={maxLength} height={lines.length} shouldFill={false}>
+      {lines.map((line, lineIndex) => {
+        const runs: Array<{ start: number; chars: string[] }> = []
+        let current: { start: number; chars: string[] } | null = null
+
+        for (let i = 0; i < line.length; i++) {
+          const revealed = i <= revealCol
+          const char = line[i]
+          const isVisible = revealed && char !== " "
+
+          if (isVisible) {
+            if (!current) {
+              current = { start: i, chars: [] }
+            }
+            current.chars.push(char)
+          } else {
+            if (current) {
+              runs.push(current)
+              current = null
+            }
+          }
+        }
+        if (current) runs.push(current)
+
+        return runs.map((run, runIndex) => (
+          <box
+            key={`${lineIndex}-${runIndex}`}
+            position="absolute"
+            top={lineIndex}
+            left={run.start}
+            shouldFill={false}
+          >
+            <text shouldFill={false}>
+              {run.chars.map((char, ci) => (
+                <span
+                  key={ci}
+                  style={{ fg: hexColors[run.start + ci] }}
+                >
+                  {char}
+                </span>
+              ))}
+            </text>
+          </box>
+        ))
+      })}
+    </box>
   )
 }
 
@@ -93,19 +124,13 @@ export function Logo({ compact, narrow, mobile }: { compact?: boolean; narrow?: 
   const subtitle = (
     <>
       <text>{" "}</text>
-      <box flexDirection="column" alignItems="center" width="100%">
-        <text style={textStyle({ dim: true })} opacity={taglineOpacity} wrapMode="word" textAlign="center" width="100%">{"A framework for building terminal apps, built on "}<a href="https://opentui.com" style={{ attributes: 72 }}>OpenTUI</a>{" + React." + (mobile ? " " : "\n") + "(Gridland apps, like this website, work in the browser and terminal.)"}</text>
+      <box flexDirection="column" alignItems="center" width="100%" shouldFill={false}>
+        <text style={textStyle({ dim: true })} opacity={taglineOpacity} wrapMode="word" textAlign="center" width="100%" shouldFill={false}>{"A framework for building terminal apps, built on "}<a href="https://opentui.com" style={{ attributes: 72 }}>OpenTUI</a>{" + React." + (mobile ? " " : "\n") + "(Gridland apps, like this website, work in the browser and terminal.)"}</text>
       </box>
     </>
   )
 
   // In CLI mode (no requestAnimationFrame), render without overflow/position wrappers
-  const artContent = compact
-    ? <RevealGradient revealCol={revealCol}>gridland</RevealGradient>
-    : narrow
-      ? <><RevealGradient revealCol={revealCol}>{gridArt}</RevealGradient><RevealGradient revealCol={revealCol}>{landArt}</RevealGradient></>
-      : <RevealGradient revealCol={revealCol}>{fullArt}</RevealGradient>
-
   if (!hasRAF) {
     const art = compact ? "gridland" : narrow ? gridArt + "\n" + landArt : fullArt
     return (
@@ -118,9 +143,9 @@ export function Logo({ compact, narrow, mobile }: { compact?: boolean; narrow?: 
 
   if (compact) {
     return (
-      <box flexDirection="column" flexShrink={0} width="100%">
-        <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0}>
-          <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center">
+      <box flexDirection="column" flexShrink={0} width="100%" shouldFill={false}>
+        <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0} shouldFill={false}>
+          <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center" shouldFill={false}>
             <RevealGradient revealCol={revealCol}>gridland</RevealGradient>
           </box>
         </box>
@@ -131,9 +156,9 @@ export function Logo({ compact, narrow, mobile }: { compact?: boolean; narrow?: 
 
   if (narrow) {
     return (
-      <box flexDirection="column" flexShrink={0} width="100%">
-        <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0}>
-          <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center">
+      <box flexDirection="column" flexShrink={0} width="100%" shouldFill={false}>
+        <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0} shouldFill={false}>
+          <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center" shouldFill={false}>
             <RevealGradient revealCol={revealCol}>{gridArt}</RevealGradient>
             <RevealGradient revealCol={revealCol}>{landArt}</RevealGradient>
           </box>
@@ -144,9 +169,9 @@ export function Logo({ compact, narrow, mobile }: { compact?: boolean; narrow?: 
   }
 
   return (
-    <box flexDirection="column" flexShrink={0} width="100%">
-      <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0}>
-        <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center">
+    <box flexDirection="column" flexShrink={0} width="100%" shouldFill={false}>
+      <box height={artHeight} overflow="hidden" position="relative" width="100%" flexShrink={0} shouldFill={false}>
+        <box position="absolute" top={dropOffset} width="100%" flexDirection="column" alignItems="center" shouldFill={false}>
           <RevealGradient revealCol={revealCol}>{fullArt}</RevealGradient>
         </box>
       </box>
