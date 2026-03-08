@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gridland/web": "^0.1.0",
+    "@gridland/web": "^0.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
