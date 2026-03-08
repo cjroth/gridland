@@ -56,38 +56,30 @@ program
         pm,
       })
     } else {
-      // Interactive mode: lazy-import React + opentui to avoid loading
-      // these heavy deps when running in non-interactive mode
-      const [{ createCliRenderer }, { createRoot }, React, { CreateGridlandApp }] =
-        await Promise.all([
-          import("@opentui/core"),
-          import("@opentui/react"),
-          import("react"),
-          import("./app.js"),
-        ])
+      const { promptProjectName, promptFramework, promptInstallDeps, promptInitGit } =
+        await import("./prompts.js")
 
-      type WizardResult = import("./app.js").WizardResult
+      console.log("\n  GRIDLAND\n")
+      console.log("  Create a new Gridland project\n")
 
-      const renderer = createCliRenderer()
-      const root = createRoot(renderer)
+      const projectName = await promptProjectName(projectNameArg)
+      const validation = validateProjectName(projectName)
+      if (!validation.valid) {
+        console.error(pc.red(validation.message!))
+        process.exit(1)
+      }
 
-      await new Promise<void>((resolve) => {
-        root.render(
-          React.createElement(CreateGridlandApp, {
-            initialName: projectNameArg,
-            onComplete: async (result: WizardResult) => {
-              root.unmount()
-              renderer.cleanup()
+      const framework = await promptFramework()
+      const installDeps = await promptInstallDeps()
+      const initGit = await promptInitGit()
 
-              await runScaffold({
-                ...result,
-                overwrite: options.overwrite,
-                pm,
-              })
-              resolve()
-            },
-          })
-        )
+      await runScaffold({
+        projectName,
+        framework,
+        installDeps,
+        initGit,
+        overwrite: options.overwrite,
+        pm,
       })
     }
   })

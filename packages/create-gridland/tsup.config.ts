@@ -10,10 +10,5 @@ export default defineConfig({
   banner: {
     js: "#!/usr/bin/env node",
   },
-  external: [
-    "@opentui/core",
-    "@opentui/react",
-    "react",
-  ],
-  noExternal: ["@gridland/ui", "picocolors"],
+  noExternal: ["picocolors"],
 })
