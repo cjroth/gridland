@@ -1,0 +1,150 @@
+---
+title: Container Sandboxing
+description: Run CLI apps in isolated Docker containers with zero trust
+---
+
+import { Callout } from 'fumadocs-ui/components/callout'
+import { Step, Steps } from 'fumadocs-ui/components/steps'
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+
+Run any CLI or TUI app inside a hardened Docker container. This is ideal for
+running untrusted demos, third-party packages, or student submissions with
+full isolation from your host system.
+
+```bash title="Terminal"
+bunx @gridland/container chalk-animation
+```
+
+## Source Types
+
+`@gridland/container` accepts four kinds of sources:
+
+| Source | Example | What happens |
+|--------|---------|-------------|
+| npm package | `chalk-animation` | Installs and runs the package bin |
+| GitHub shorthand | `cjroth/my-tui` | Clones the repo and runs it |
+| Git URL | `https://github.com/user/repo` | Clones the repo and runs it |
+| Local directory | `./my-app` | Mounts the directory read-only |
+
+## Getting Started
+
+<Steps>
+<Step>
+
+## Install Docker
+
+`@gridland/container` requires Docker to be installed and running.
+
+<Tabs items={['macOS', 'Linux']}>
+<Tab value="macOS">
+Install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
+and make sure it's running.
+</Tab>
+<Tab value="Linux">
+```bash title="Terminal"
+curl -fsSL https://get.docker.com | sh
+```
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+## Run a Package
+
+Run any npm package that exposes a CLI binary:
+
+```bash title="Terminal"
+bunx @gridland/container cowsay -- "Hello from a container"
+```
+
+The first run pulls or builds the sandbox image. Subsequent runs use the
+cached image.
+
+</Step>
+<Step>
+
+## Run a GitHub Repo
+
+Use `owner/repo` shorthand or a full URL:
+
+```bash title="Terminal"
+bunx @gridland/container cjroth/my-tui-demo
+```
+
+The repo is cloned with `--depth 1`, dependencies are installed, and the
+entry point from `package.json` is executed.
+
+</Step>
+<Step>
+
+## Run a Local Project
+
+Mount a local directory into the container read-only:
+
+```bash title="Terminal"
+bunx @gridland/container ./my-app
+```
+
+<Callout type="info">
+The local directory is mounted read-only and copied to a tmpfs inside the
+container. Your source files are never modified.
+</Callout>
+
+</Step>
+</Steps>
+
+## Options
+
+```
+bunx @gridland/container <source> [options] [-- <args...>]
+```
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--no-network` | network on | Disable network access inside the container |
+| `--memory <limit>` | `512m` | Set the container memory limit |
+| `--build` | pull first | Force a local Docker image build |
+| `-- <args...>` | | Forward arguments to the container entry point |
+
+### Examples
+
+```bash title="Terminal"
+# Run with no network access
+bunx @gridland/container some-tui --no-network
+
+# Set a 1GB memory limit
+bunx @gridland/container heavy-app --memory 1g
+
+# Forward arguments after --
+bunx @gridland/container cjroth/gridland -- gradient --speed fast
+
+# Force rebuild the sandbox image
+bunx @gridland/container my-app --build
+```
+
+## Security
+
+Every container runs with hardened defaults:
+
+- **`--cap-drop=ALL`** — all Linux capabilities dropped
+- **`--security-opt=no-new-privileges`** — prevents privilege escalation
+- **`--read-only`** — root filesystem is read-only
+- **`--pids-limit=256`** — limits process count
+- **`--memory=512m`** — default memory cap
+- **Non-root user** — runs as an unprivileged `runner` user
+- **tmpfs `/tmp`** — writable scratch space limited to 256MB
+
+<Callout type="warn">
+Network access is enabled by default. Use `--no-network` when running
+untrusted code that should not make outbound connections.
+</Callout>
+
+## How It Works
+
+1. The CLI detects the source type (npm, git, or local)
+2. Docker pulls the pre-built sandbox image from `ghcr.io` (or builds locally)
+3. A container runs with the security flags above
+4. Inside the container, the entrypoint installs dependencies and runs the app
+5. TTY is forwarded so interactive TUI apps work normally
+6. The container is removed on exit (`--rm`)
