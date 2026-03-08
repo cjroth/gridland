@@ -136,7 +136,10 @@ export function Logo({ compact, narrow, mobile }: { compact?: boolean; narrow?: 
     return (
       <box flexDirection="column" flexShrink={0} width="100%" alignItems="center">
         <Gradient name="instagram">{art}</Gradient>
-        <text style={textStyle({ dim: true })} wrapMode="word" textAlign="center" width="100%">A framework for building terminal apps, built on OpenTUI + React.{"\n"}(Gridland apps, like this website, work in the browser and terminal.)</text>
+        <text>{" "}</text>
+        <box flexDirection="column" alignItems="center" width="100%" shouldFill={false}>
+          <text style={textStyle({ dim: true })} shouldFill={false}>A framework for building terminal apps, built on OpenTUI + React.{"\n"}(Gridland apps, like this website, work in the browser and terminal.)</text>
+        </box>
       </box>
     )
   }
