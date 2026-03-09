@@ -241,7 +241,7 @@ export function SelectInput<V>({
             <span style={textStyle({ fg: isHighlighted ? resolvedHighlight : undefined })}>
               {isHighlighted ? CURSOR : " "}{" "}
             </span>
-            <span style={textStyle({ fg: isItemDisabled ? theme.muted : theme.muted, dim: isItemDisabled })}>
+            <span style={textStyle({ fg: theme.muted, dim: isItemDisabled })}>
               {RADIO}{" "}
             </span>
             <span style={textStyle({ fg: itemColor, dim: isItemDisabled })}>

@@ -107,7 +107,10 @@ export function MultiSelect<V>({
     submitted: false,
   })
 
-  const currentSelected = isControlled ? new Set(controlledSelected) : state.selected
+  const currentSelected = useMemo(
+    () => isControlled ? new Set(controlledSelected) : state.selected,
+    [isControlled, controlledSelected, state.selected],
+  )
 
   const { flatRows, selectableItems } = useMemo(() => {
     const rows: Row<V>[] = []
@@ -265,7 +268,7 @@ export function MultiSelect<V>({
             <span style={textStyle({ fg: isHighlighted ? resolvedHighlight : undefined })}>
               {isHighlighted ? CURSOR : " "}{" "}
             </span>
-            <span style={textStyle({ fg: isItemDisabled ? theme.muted : isSelected ? resolvedCheckbox : theme.muted, dim: isItemDisabled })}>
+            <span style={textStyle({ fg: isSelected && !isItemDisabled ? resolvedCheckbox : theme.muted, dim: isItemDisabled })}>
               {isSelected ? CHECKED : UNCHECKED}{" "}
             </span>
             <span style={textStyle({ fg: itemColor, dim: isItemDisabled })}>
