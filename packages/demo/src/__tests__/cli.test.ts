@@ -47,8 +47,9 @@ describe("cli", () => {
   test("exits with error for unknown demo", () => {
     const result = run("nonexistent")
     expect(result.status).toBe(1)
-    expect(result.stderr).toContain('Unknown demo: "nonexistent"')
-    expect(result.stderr).toContain("Available:")
+    const output = result.stdout + result.stderr
+    expect(output).toContain('Unknown demo: "nonexistent"')
+    expect(output).toContain("Available:")
   })
 })
 

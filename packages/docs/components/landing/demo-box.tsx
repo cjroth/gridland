@@ -27,7 +27,7 @@ export function DemoBox() {
       <text style={textStyle({ bold: true, fg: theme.accent })}>Try a demo</text>
       <text>
         <span style={textStyle({ dim: true })}>$ </span>
-        <span style={textStyle({ bold: true })}>npx </span>
+        <span style={textStyle({ bold: true })}>bunx </span>
         <span style={textStyle({ fg: theme.accent })}>@gridland/demo </span>
         <span style={textStyle({ dim: true })}>{"<name>"}</span>
       </text>

@@ -79,7 +79,7 @@ export function LandingApp({ useKeyboard }: LandingAppProps) {
             >
               <text>
                 <span style={textStyle({ dim: true })}>$ </span>
-                <span style={textStyle({ bold: true })}>npx </span>
+                <span style={textStyle({ bold: true })}>bunx </span>
                 <span style={textStyle({ fg: theme.accent })}>@gridland/demo landing</span>
               </text>
             </box>

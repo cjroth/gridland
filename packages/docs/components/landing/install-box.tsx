@@ -15,7 +15,7 @@ export function InstallBox() {
     >
       <text>
         <span style={textStyle({ dim: true })}>$ </span>
-        <span style={textStyle({ bold: true })}>npm create </span>
+        <span style={textStyle({ bold: true })}>bun create </span>
         <span style={textStyle({ fg: theme.accent })}>gridland</span>
       </text>
     </box>
