@@ -1,0 +1,18 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`SelectInput snapshots renders 4 items with default state 1`] = `
+"◆ Select
+│ ▸ ○ TypeScript
+│   ○ JavaScript
+│   ○ Python
+│   ○ Rust"
+`;
+
+exports[`SelectInput snapshots renders with cursor on default value 1`] = `
+"◆ Select
+│   ○ TypeScript
+│ ▸ ○ JavaScript
+│   ○ Python"
+`;
+
+exports[`SelectInput snapshots renders with empty items 1`] = `"◆ Select"`;
