@@ -1,138 +1,288 @@
-import { useState, useCallback } from "react"
+import { useReducer, useMemo, useRef } from "react"
+import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
 
 export type MultiSelectItem<V> = {
   key?: string
   label: string
   value: V
+  group?: string
+  disabled?: boolean
 }
 
 export interface MultiSelectProps<V> {
   items?: MultiSelectItem<V>[]
-  selected?: MultiSelectItem<V>[]
-  defaultSelected?: MultiSelectItem<V>[]
-  focus?: boolean
-  initialIndex?: number
+  defaultSelected?: V[]
+  selected?: V[]
+  onChange?: (values: V[]) => void
+  disabled?: boolean
+  invalid?: boolean
+  required?: boolean
+  placeholder?: string
+  maxCount?: number
+  title?: string
+  submittedStatus?: string
   limit?: number
+  enableSelectAll?: boolean
+  enableClear?: boolean
   highlightColor?: string
   checkboxColor?: string
-  onSelect?: (item: MultiSelectItem<V>) => void
-  onUnselect?: (item: MultiSelectItem<V>) => void
-  onSubmit?: (items: MultiSelectItem<V>[]) => void
-  onHighlight?: (item: MultiSelectItem<V>) => void
-  /** Keyboard handler — pass useKeyboard from @opentui/react */
+  onSubmit?: (values: V[]) => void
   useKeyboard?: (handler: (event: any) => void) => void
 }
 
+type State<V> = {
+  cursor: number
+  selected: Set<V>
+  submitted: boolean
+}
+
+type Action<V> =
+  | { type: "MOVE"; direction: 1 | -1; max: number }
+  | { type: "SET_SELECTED"; values: V[] }
+  | { type: "SUBMIT" }
+
+function reducer<V>(state: State<V>, action: Action<V>): State<V> {
+  switch (action.type) {
+    case "MOVE": {
+      let next = state.cursor + action.direction
+      if (next < 0) next = action.max - 1
+      if (next >= action.max) next = 0
+      return { ...state, cursor: next }
+    }
+    case "SET_SELECTED":
+      return { ...state, selected: new Set(action.values) }
+    case "SUBMIT":
+      return { ...state, submitted: true }
+    default:
+      return state
+  }
+}
+
+const VISIBLE = 12
+const BAR = "│"
+const CHECKED = "●"
+const UNCHECKED = "○"
+const CURSOR = "▸"
+const SEPARATOR = "─"
+
+type Row<V> =
+  | { type: "group"; label: string }
+  | { type: "separator" }
+  | { type: "item"; item: MultiSelectItem<V>; index: number }
+
 export function MultiSelect<V>({
   items = [],
-  selected: controlledSelected,
   defaultSelected = [],
-  focus = true,
-  initialIndex = 0,
+  selected: controlledSelected,
+  onChange,
+  disabled = false,
+  invalid = false,
+  required = false,
+  placeholder,
+  maxCount,
+  title = "Select",
+  submittedStatus = "submitted",
   limit,
+  enableSelectAll = true,
+  enableClear = true,
   highlightColor,
   checkboxColor,
-  onSelect,
-  onUnselect,
   onSubmit,
-  onHighlight,
   useKeyboard,
 }: MultiSelectProps<V>) {
   const theme = useTheme()
-  const resolvedHighlightColor = highlightColor ?? theme.primary
-  const resolvedCheckboxColor = checkboxColor ?? theme.secondary
-  const visibleCount = limit && limit < items.length ? limit : items.length
-  const clampedInitial = Math.min(Math.max(0, initialIndex), Math.max(0, items.length - 1))
+  const resolvedHighlight = highlightColor ?? theme.primary
+  const resolvedCheckbox = checkboxColor ?? theme.accent
 
-  const [highlightedIndex, setHighlightedIndex] = useState(clampedInitial)
-  const [scrollOffset, setScrollOffset] = useState(
-    limit ? Math.max(0, clampedInitial - Math.floor(limit / 2)) : 0,
+  const isControlled = controlledSelected !== undefined
+  const controlledRef = useRef(isControlled)
+  if (controlledRef.current !== isControlled) {
+    console.warn("MultiSelect: switching between controlled and uncontrolled is not supported.")
+  }
+
+  const [state, dispatch] = useReducer(reducer<V>, {
+    cursor: 0,
+    selected: new Set(isControlled ? controlledSelected : defaultSelected),
+    submitted: false,
+  })
+
+  const currentSelected = useMemo(
+    () => isControlled ? new Set(controlledSelected) : state.selected,
+    [isControlled, controlledSelected, state.selected],
   )
-  const [internalSelected, setInternalSelected] = useState<MultiSelectItem<V>[]>(defaultSelected)
 
-  const selected = controlledSelected ?? internalSelected
+  const { flatRows, selectableItems } = useMemo(() => {
+    const rows: Row<V>[] = []
+    const selectable: Array<{ item: MultiSelectItem<V>; index: number }> = []
+    let index = 0
+    const grouped = new Map<string, MultiSelectItem<V>[]>()
+    for (const item of items) {
+      const group = item.group ?? ""
+      const list = grouped.get(group) ?? []
+      list.push(item)
+      grouped.set(group, list)
+    }
+    let groupIndex = 0
+    for (const [group, groupItems] of grouped) {
+      if (groupIndex > 0) {
+        rows.push({ type: "separator" })
+      }
+      if (group) {
+        rows.push({ type: "group", label: group })
+      }
+      for (const item of groupItems) {
+        rows.push({ type: "item", item, index })
+        selectable.push({ item, index })
+        index++
+      }
+      groupIndex++
+    }
+    return { flatRows: rows, selectableItems: selectable }
+  }, [items])
 
-  const isSelected = useCallback(
-    (value: V) => selected.some((item) => item.value === value),
-    [selected],
-  )
+  const visibleCount = limit ?? VISIBLE
+  const cursorRowIndex = flatRows.findIndex((r) => r.type === "item" && r.index === state.cursor)
+  const scrollOffset = Math.max(0, Math.min(cursorRowIndex - Math.floor(visibleCount / 2), flatRows.length - visibleCount))
+  const visibleRows = flatRows.slice(scrollOffset, scrollOffset + visibleCount)
 
-  const visibleItems = limit ? items.slice(scrollOffset, scrollOffset + visibleCount) : items
+  const setSelected = (values: V[]) => {
+    if (isControlled) {
+      onChange?.(values)
+    } else {
+      dispatch({ type: "SET_SELECTED", values })
+    }
+  }
 
-  // Use keyboard hook if provided
+  const diamondColor = invalid ? theme.error
+    : disabled ? theme.muted
+    : theme.accent
+
   useKeyboard?.((event: any) => {
-    if (!focus) return
+    if (state.submitted || disabled) return
 
-    if (event.name === "j" || event.name === "down") {
-      const newIndex = highlightedIndex < items.length - 1 ? highlightedIndex + 1 : 0
-      setHighlightedIndex(newIndex)
-
-      if (limit && newIndex >= scrollOffset + visibleCount) {
-        setScrollOffset(newIndex - visibleCount + 1)
-      } else if (limit && newIndex === 0) {
-        setScrollOffset(0)
+    if (event.name === "up" || event.name === "k") {
+      dispatch({ type: "MOVE", direction: -1, max: selectableItems.length })
+    } else if (event.name === "down" || event.name === "j") {
+      dispatch({ type: "MOVE", direction: 1, max: selectableItems.length })
+    } else if (event.name === "return") {
+      const current = selectableItems[state.cursor]
+      if (current && !current.item.disabled) {
+        const isDeselecting = currentSelected.has(current.item.value)
+        if (!isDeselecting && maxCount !== undefined && currentSelected.size >= maxCount) return
+        const next = new Set(currentSelected)
+        if (isDeselecting) next.delete(current.item.value)
+        else next.add(current.item.value)
+        setSelected(Array.from(next))
       }
-
-      onHighlight?.(items[newIndex]!)
-    }
-
-    if (event.name === "k" || event.name === "up") {
-      const newIndex = highlightedIndex > 0 ? highlightedIndex - 1 : items.length - 1
-      setHighlightedIndex(newIndex)
-
-      if (limit && newIndex < scrollOffset) {
-        setScrollOffset(newIndex)
-      } else if (limit && newIndex >= items.length - 1 && scrollOffset + visibleCount < items.length) {
-        setScrollOffset(Math.max(0, items.length - visibleCount))
-      }
-
-      onHighlight?.(items[newIndex]!)
-    }
-
-    if (event.name === "space") {
-      const item = items[highlightedIndex]
-      if (!item) return
-
-      if (isSelected(item.value)) {
-        onUnselect?.(item)
-        if (!controlledSelected) {
-          setInternalSelected((prev) => prev.filter((s) => s.value !== item.value))
-        }
-      } else {
-        onSelect?.(item)
-        if (!controlledSelected) {
-          setInternalSelected((prev) => [...prev, item])
-        }
-      }
-    }
-
-    if (event.name === "return") {
-      onSubmit?.(selected)
+    } else if (event.name === "a" && enableSelectAll) {
+      const enabledValues = items.filter((i) => !i.disabled).map((i) => i.value)
+      setSelected(maxCount !== undefined ? enabledValues.slice(0, maxCount) : enabledValues)
+    } else if (event.name === "x" && enableClear) {
+      setSelected([])
+    } else if (event.name === "space" && currentSelected.size > 0) {
+      dispatch({ type: "SUBMIT" })
+      onSubmit?.(Array.from(currentSelected))
     }
   })
 
+  if (state.submitted) {
+    const selectedItems = items.filter((i) => currentSelected.has(i.value))
+    return (
+      <box flexDirection="column">
+        <text>
+          <span style={textStyle({ fg: theme.success })}>{"◆ "}</span>
+          <span style={textStyle({ bold: true })}>{title}</span>
+        </text>
+        {selectedItems.map((item) => (
+          <text key={item.key ?? String(item.value)}>
+            <span style={textStyle({ fg: theme.success })}>{BAR} </span>
+            <span>{"  "}</span>
+            <span style={textStyle({ fg: theme.success })}>{CHECKED} </span>
+            <span>{item.label}</span>
+          </text>
+        ))}
+        <text> </text>
+        <text>
+          <span style={textStyle({ dim: true })}>{selectedItems.length} selected — {submittedStatus}</span>
+        </text>
+      </box>
+    )
+  }
+
+  const hasItems = selectableItems.length > 0
+
   return (
-    <box>
-      {visibleItems.map((item, index) => {
-        const actualIndex = (limit ? scrollOffset : 0) + index
-        const isHighlighted = actualIndex === highlightedIndex
-        const itemIsSelected = isSelected(item.value)
+    <box flexDirection="column">
+      <text>
+        <span style={textStyle({ fg: diamondColor, dim: disabled })}>{"◆ "}</span>
+        <span style={textStyle({ bold: true, dim: disabled })}>{title}</span>
+        {required && <span style={textStyle({ fg: theme.error })}>{" *"}</span>}
+        {maxCount !== undefined && (
+          <span style={textStyle({ dim: true })}>{` (${currentSelected.size}/${maxCount})`}</span>
+        )}
+      </text>
+      {invalid && (
+        <text>
+          <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+          <span style={textStyle({ fg: theme.error })}>{"  Please select at least one option"}</span>
+        </text>
+      )}
+      {!hasItems && placeholder && (
+        <text>
+          <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+          <span style={textStyle({ dim: true })}>{"  "}{placeholder}</span>
+        </text>
+      )}
+      {visibleRows.map((row, i) => {
+        if (row.type === "separator") {
+          return (
+            <text key={`sep-${i}`}>
+              <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+              <span style={textStyle({ fg: theme.muted })}>{"  "}{SEPARATOR.repeat(20)}</span>
+            </text>
+          )
+        }
+
+        if (row.type === "group") {
+          return (
+            <text key={`group-${row.label}`}>
+              <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+              <span style={textStyle({ bold: true, fg: theme.muted })}>{` ${row.label}`}</span>
+            </text>
+          )
+        }
+
+        const { item, index: itemIndex } = row
+        const isHighlighted = !disabled && itemIndex === state.cursor
+        const isSelected = currentSelected.has(item.value)
+        const isItemDisabled = disabled || !!item.disabled
+        const itemColor = isItemDisabled ? theme.muted
+          : isHighlighted ? resolvedHighlight
+          : isSelected ? resolvedCheckbox
+          : undefined
 
         return (
           <text key={item.key ?? String(item.value)}>
-            <span style={{ fg: isHighlighted ? resolvedHighlightColor : undefined }}>
-              {isHighlighted ? "\u25b6" : " "}{" "}
+            <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+            <span style={textStyle({ fg: isHighlighted ? resolvedHighlight : undefined })}>
+              {isHighlighted ? CURSOR : " "}{" "}
             </span>
-            <span style={{ fg: resolvedCheckboxColor }}>
-              {itemIsSelected ? "\u25c9" : "\u25cb"}{" "}
+            <span style={textStyle({ fg: isSelected && !isItemDisabled ? resolvedCheckbox : theme.muted, dim: isItemDisabled })}>
+              {isSelected ? CHECKED : UNCHECKED}{" "}
             </span>
-            <span style={{ fg: isHighlighted ? resolvedHighlightColor : undefined }}>
+            <span style={textStyle({ fg: itemColor, dim: isItemDisabled })}>
               {item.label}
             </span>
           </text>
         )
       })}
+      {currentSelected.size > 0 && (
+        <text>
+          <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
+          <span style={textStyle({ dim: true })}>{"  space to submit"}</span>
+        </text>
+      )}
     </box>
   )
 }
