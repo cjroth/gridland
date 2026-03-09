@@ -1,6 +1,6 @@
 {
   "name": "@gridland/web",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "type": "module",
   "exports": {
     ".": {
@@ -27,7 +27,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup; node build-browser.mjs",
     "dev": "vite",
