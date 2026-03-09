@@ -96,7 +96,7 @@ export function buildDockerArgs({
     "--security-opt=no-new-privileges",
     "--read-only",
     "--tmpfs",
-    "/tmp:rw,nosuid,size=256m",
+    "/tmp:rw,exec,nosuid,size=256m",
     "--memory",
     memory,
     "--pids-limit",
