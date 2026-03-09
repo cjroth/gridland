@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execSync, spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -61,12 +61,35 @@ try {
 
   const repoDir = join(workDir, "gridland");
 
-  // Trim workspaces to only what demos need — avoids installing heavy deps
-  // like Next.js that fail in Alpine/musl containers (@next/swc-linux-arm64-gnu)
+  // Trim workspaces and strip build-only deps to keep install fast and small.
+  // Avoids Next.js/@next/swc which fails on Alpine/musl containers.
   const pkgPath = join(repoDir, "package.json");
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-  pkg.workspaces = ["packages/web", "packages/ui", "packages/testing"];
+  pkg.workspaces = ["packages/web", "packages/ui", "packages/testing", "packages/docs"];
+  delete pkg.devDependencies;
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+
+  // Deps only needed for building, not for running demos
+  const STRIP = new Set([
+    "tsup", "typescript", "vite", "esbuild", "postcss", "tailwindcss",
+    "@vitejs/plugin-react", "@happy-dom/global-registrator",
+    "@tailwindcss/postcss",
+    "@types/bun", "@types/node", "@types/react", "@types/react-dom",
+    "next", "fumadocs-core", "fumadocs-mdx", "fumadocs-ui",
+    "lucide-react", "react-dom",
+  ]);
+  for (const ws of pkg.workspaces) {
+    const wsPkgPath = join(repoDir, ws, "package.json");
+    if (!existsSync(wsPkgPath)) continue;
+    const wsPkg = JSON.parse(readFileSync(wsPkgPath, "utf8"));
+    for (const field of ["dependencies", "devDependencies"]) {
+      if (!wsPkg[field]) continue;
+      for (const dep of Object.keys(wsPkg[field])) {
+        if (STRIP.has(dep)) delete wsPkg[field][dep];
+      }
+    }
+    writeFileSync(wsPkgPath, JSON.stringify(wsPkg, null, 2) + "\n");
+  }
 
   if (useBun) {
     execSync("bun install", { cwd: repoDir, stdio: ["ignore", "ignore", "inherit"] });
