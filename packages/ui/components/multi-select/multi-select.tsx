@@ -1,6 +1,7 @@
 import { useReducer, useMemo, useRef } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
+import { useKeyboardContext } from "../provider/provider"
 
 export type MultiSelectItem<V> = {
   key?: string
@@ -91,9 +92,10 @@ export function MultiSelect<V>({
   checkboxColor,
   allowEmpty = false,
   onSubmit,
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: MultiSelectProps<V>) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const resolvedHighlight = highlightColor ?? theme.primary
   const resolvedCheckbox = checkboxColor ?? theme.accent
 

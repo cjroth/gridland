@@ -3,6 +3,7 @@ import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
 import type { Theme } from "../theme/index"
 import type { ChatStatus } from "../chat-input/chat-input"
+import { useKeyboardContext } from "../provider/provider"
 
 export interface ChatMessage {
   /** Unique identifier for the message. Used as a list key. */
@@ -145,7 +146,7 @@ function ChatInput({
   prompt = "> ",
   promptColor,
   disabled = false,
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: {
   onSubmit: (text: string) => void
   placeholder?: string
@@ -154,6 +155,7 @@ function ChatInput({
   disabled?: boolean
   useKeyboard?: (handler: (event: any) => void) => void
 }) {
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const [value, setValue] = useState("")
   const valueRef = useRef("")
 
@@ -230,9 +232,10 @@ export function ChatPanel({
   userColor,
   assistantColor,
   loadingText = "Thinking...",
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: ChatPanelProps) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const resolvedUserColor = userColor ?? theme.secondary
   const resolvedAssistantColor = assistantColor ?? theme.primary
   const resolvedPromptColor = promptColor ?? theme.secondary

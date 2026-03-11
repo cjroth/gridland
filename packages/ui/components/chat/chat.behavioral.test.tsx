@@ -302,4 +302,90 @@ describe("ChatPanel behavior", () => {
     tui.flush()
     expect(cancelled).toBe(true)
   })
+
+  // ── Status-driven behavior ─────────────────────────────────────────
+
+  it("shows loading indicator when status is submitted", () => {
+    const { screen } = renderTui(
+      <ChatPanel
+        messages={[]}
+        status="submitted"
+        onSendMessage={() => {}}
+      />,
+      { cols: 50, rows: 8 },
+    )
+    expect(screen.text()).toContain("Thinking...")
+  })
+
+  it("shows streaming text when status is streaming", () => {
+    const { screen } = renderTui(
+      <ChatPanel
+        messages={[]}
+        status="streaming"
+        streamingText="Partial response"
+        onSendMessage={() => {}}
+      />,
+      { cols: 50, rows: 8 },
+    )
+    expect(screen.text()).toContain("Partial response")
+  })
+
+  it("ignores input when status is submitted", () => {
+    let sent = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    const tui = renderTui(
+      <ChatPanel
+        messages={[]}
+        status="submitted"
+        onSendMessage={(text) => { sent = text }}
+        useKeyboard={mockUseKeyboard}
+      />,
+      { cols: 50, rows: 8 },
+    )
+    savedHandler({ name: "H" })
+    savedHandler({ name: "return" })
+    tui.flush()
+    expect(sent).toBeNull()
+  })
+
+  it("escape calls onStop when status is streaming", () => {
+    let stopped = false
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    const tui = renderTui(
+      <ChatPanel
+        messages={[]}
+        status="streaming"
+        streamingText="partial"
+        onStop={() => { stopped = true }}
+        onSendMessage={() => {}}
+        useKeyboard={mockUseKeyboard}
+      />,
+      { cols: 50, rows: 8 },
+    )
+    savedHandler({ name: "escape" })
+    tui.flush()
+    expect(stopped).toBe(true)
+  })
+
+  it("enables input when status is ready", () => {
+    let sent = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    const tui = renderTui(
+      <ChatPanel
+        messages={[]}
+        status="ready"
+        onSendMessage={(text) => { sent = text }}
+        useKeyboard={mockUseKeyboard}
+      />,
+      { cols: 50, rows: 8 },
+    )
+    savedHandler({ name: "H" })
+    savedHandler({ name: "i" })
+    savedHandler({ name: "return" })
+    tui.flush()
+    expect(sent).toBe("Hi")
+  })
 })

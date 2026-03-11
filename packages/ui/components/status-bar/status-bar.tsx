@@ -38,7 +38,7 @@ export function StatusBar({ items, extra }: StatusBarProps) {
       parts.push(<span key={`gap-${i}`}>{" "}</span>)
     }
     parts.push(
-      <span key={`key-${i}`} style={textStyle({ inverse: true, bold: true })}>
+      <span key={`key-${i}`} style={textStyle({ inverse: true })}>
         {` ${item.key} `}
       </span>,
     )

@@ -1,6 +1,7 @@
 import { useReducer, useMemo, useRef } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
+import { useKeyboardContext } from "../provider/provider"
 
 export type SelectInputItem<V> = {
   key?: string
@@ -76,9 +77,10 @@ export function SelectInput<V>({
   limit,
   highlightColor,
   onSubmit,
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: SelectInputProps<V>) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const resolvedHighlight = highlightColor ?? theme.primary
 
   const isControlled = controlledValue !== undefined

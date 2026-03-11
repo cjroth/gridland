@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
+import { useKeyboardContext } from "../provider/provider"
 import { StatusBar } from "../status-bar/status-bar"
 import { Spinner, VARIANT_NAMES } from "./spinner"
 
@@ -17,8 +18,9 @@ export interface SpinnerPickerProps {
   useKeyboard?: (handler: (event: any) => void) => void
 }
 
-export function SpinnerPicker({ useKeyboard }: SpinnerPickerProps) {
+export function SpinnerPicker({ useKeyboard: useKeyboardProp }: SpinnerPickerProps) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const [selected, setSelected] = useState(0)
 
   useKeyboard?.((event: any) => {

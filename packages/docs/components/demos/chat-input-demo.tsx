@@ -6,9 +6,7 @@ import { ChatInput, StatusBar, Modal, SelectInput, textStyle } from "@gridland/u
 import { useKeyboard } from "@opentui/react"
 
 const commands = [
-  { cmd: "/help", desc: "Show commands" },
   { cmd: "/model", desc: "Switch model" },
-  { cmd: "/clear", desc: "Clear conversation" },
 ]
 
 const files = [
@@ -33,11 +31,6 @@ function ChatInputApp() {
   const handleSubmit = (text: string) => {
     if (text === "/model") {
       setShowModelPicker(true)
-      setResetKey((k) => k + 1)
-      return
-    }
-    if (text === "/clear") {
-      setLastMessage("")
       setResetKey((k) => k + 1)
       return
     }
@@ -93,23 +86,23 @@ function ChatInputApp() {
       />
       <box>
         <text>
-          <span style={textStyle({ fg: "#C4A8FF" })}>{"[⊡_⊡]"}</span>
-          <span style={textStyle({ dim: true })}>{" " + model}</span>
+          <span style={textStyle({ dim: true })}>{"model: " + model}</span>
         </text>
       </box>
-      <StatusBar items={[
-        { key: "⏎", label: "send" },
-        { key: "/", label: "commands" },
-        { key: "@", label: "files" },
-        { key: "↑", label: "history" },
-      ]} />
+      <box paddingTop={1} paddingLeft={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "⏎ enter", label: "send" },
+          { key: "/model", label: "change model" },
+          { key: "↑", label: "history" },
+        ]} />
+      </box>
     </box>
   )
 }
 
 export default function ChatInputDemo() {
   return (
-    <DemoWindow title="ChatInput" tuiStyle={{ width: "100%", height: 200 }}>
+    <DemoWindow title="ChatInput" tuiStyle={{ width: "100%", height: 300 }}>
       <ChatInputApp />
     </DemoWindow>
   )

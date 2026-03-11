@@ -1,6 +1,7 @@
 import { useState, useRef } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
+import { useKeyboardContext } from "../provider/provider"
 
 /** Chat status matching Vercel AI SDK's useChat status pattern. */
 export type ChatStatus = "ready" | "submitted" | "streaming" | "error"
@@ -85,9 +86,10 @@ export function ChatInput({
   maxSuggestions = 5,
   enableHistory = true,
   showDividers = false,
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: ChatInputProps) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const resolvedPromptColor = promptColor ?? theme.muted
 
   // Status-driven state: when `status` is provided, it drives disabled/hint text

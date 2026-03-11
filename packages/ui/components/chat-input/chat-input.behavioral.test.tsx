@@ -322,4 +322,132 @@ describe("ChatInput behavior", () => {
     savedHandler({ name: "up" })
     expect(changed).toBeNull()
   })
+
+  // ── Status-driven behavior ─────────────────────────────────────────
+
+  it("disables input when status is submitted", () => {
+    let submitted = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="submitted"
+        useKeyboard={mockUseKeyboard}
+        onSubmit={(text) => { submitted = text }}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "h" })
+    savedHandler({ name: "return" })
+    expect(submitted).toBeNull()
+  })
+
+  it("shows submittedText when status is submitted", () => {
+    const { screen } = renderTui(
+      <ChatInput status="submitted" submittedText="Processing..." />,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("Processing...")
+  })
+
+  it("disables input when status is streaming", () => {
+    let submitted = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="streaming"
+        useKeyboard={mockUseKeyboard}
+        onSubmit={(text) => { submitted = text }}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "h" })
+    savedHandler({ name: "return" })
+    expect(submitted).toBeNull()
+  })
+
+  it("shows streamingText when status is streaming", () => {
+    const { screen } = renderTui(
+      <ChatInput status="streaming" streamingText="Writing..." />,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("Writing...")
+  })
+
+  it("calls onStop on escape when status is streaming", () => {
+    let stopped = false
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="streaming"
+        onStop={() => { stopped = true }}
+        useKeyboard={mockUseKeyboard}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "escape" })
+    expect(stopped).toBe(true)
+  })
+
+  it("does not call onStop on escape when status is ready", () => {
+    let stopped = false
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="ready"
+        onStop={() => { stopped = true }}
+        useKeyboard={mockUseKeyboard}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "escape" })
+    expect(stopped).toBe(false)
+  })
+
+  it("enables input when status is ready", () => {
+    let submitted = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="ready"
+        useKeyboard={mockUseKeyboard}
+        onSubmit={(text) => { submitted = text }}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "h" })
+    savedHandler({ name: "i" })
+    savedHandler({ name: "return" })
+    expect(submitted).toBe("hi")
+  })
+
+  it("enables input when status is error", () => {
+    let submitted = null
+    let savedHandler = null
+    const mockUseKeyboard = (handler) => { savedHandler = handler }
+    renderTui(
+      <ChatInput
+        status="error"
+        useKeyboard={mockUseKeyboard}
+        onSubmit={(text) => { submitted = text }}
+      />,
+      { cols: 40, rows: 4 },
+    )
+    savedHandler({ name: "h" })
+    savedHandler({ name: "i" })
+    savedHandler({ name: "return" })
+    expect(submitted).toBe("hi")
+  })
+
+  it("shows error text when status is error", () => {
+    const { screen } = renderTui(
+      <ChatInput status="error" errorText="Something went wrong" />,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("Something went wrong")
+  })
 })

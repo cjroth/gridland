@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, type UnderlineStyle } from "./link"
 import { StatusBar } from "../status-bar/status-bar"
 import { textStyle } from "../text-style"
+import { useKeyboardContext } from "../provider/provider"
 
 const MODES: UnderlineStyle[] = ["solid", "dashed", "dotted", "none"]
 
@@ -14,8 +15,9 @@ export interface LinkDemoProps {
 export function LinkDemo({
   url = "https://opentui.com",
   label = "Visit opentui.com",
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: LinkDemoProps) {
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const [modeIndex, setModeIndex] = useState(0)
   const mode = MODES[modeIndex]
 

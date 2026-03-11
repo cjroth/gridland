@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
+import { useKeyboardContext } from "../provider/provider"
 
 export interface ModalProps {
   /** The content rendered inside the modal border. */
@@ -26,9 +27,10 @@ export function Modal({
   borderColor,
   borderStyle = "rounded",
   onClose,
-  useKeyboard,
+  useKeyboard: useKeyboardProp,
 }: ModalProps) {
   const theme = useTheme()
+  const useKeyboard = useKeyboardContext(useKeyboardProp)
   const resolvedBorderColor = borderColor ?? theme.border
 
   // Handle Escape key
