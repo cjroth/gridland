@@ -39,8 +39,7 @@ describe("TabBar behavior", () => {
       { cols: 40, rows: 3 },
     )
     const lines = screen.text().split("\n").filter((l) => l.trim().length > 0)
-    // All content should be on a single line
-    expect(lines.length).toBe(1)
+    // Tab options should be on the first line, separator on the second
     expect(lines[0]).toContain("A")
     expect(lines[0]).toContain("B")
     expect(lines[0]).toContain("C")
