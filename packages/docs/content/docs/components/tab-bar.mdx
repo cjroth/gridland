@@ -1,14 +1,20 @@
 ---
-title: TabBar
-description: Horizontal single-line tab selector with label and options
+title: Tabs
+description: Compound tab component with triggers and content panels
 ---
 
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs'
+import { Tabs as FumiTabs, Tab } from 'fumadocs-ui/components/tabs'
 import { RunDemo } from '@/components/ui/run-demo'
-import TabBarDemo from '@/components/demos/tab-bar-demo'
+import TabBarDemo, { TabBarSimpleDemo } from '@/components/demos/tab-bar-demo'
 
-The `TabBar` component from `@gridland/ui` renders a horizontal, single-line selector
-that displays a row of text options with one visually marked as selected.
+A compound tab component inspired by shadcn/ui. Declare triggers and content panels
+side by side — the active panel renders automatically.
+
+<div className="my-8">
+  <TabBarSimpleDemo />
+</div>
+
+## Example
 
 <div className="my-8">
   <TabBarDemo />
@@ -18,7 +24,7 @@ that displays a row of text options with one visually marked as selected.
 
 ## Installation
 
-<Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
+<FumiTabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
 bun add @gridland/ui
@@ -39,22 +45,87 @@ yarn add @gridland/ui
 pnpm add @gridland/ui
 ```
 </Tab>
-</Tabs>
+</FumiTabs>
 
 ## Usage
 
-```tsx title="Example"
+```tsx title="Compound API"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@gridland/ui"
+
+<Tabs defaultValue="files">
+  <TabsList>
+    <TabsTrigger value="files">Files</TabsTrigger>
+    <TabsTrigger value="search">Search</TabsTrigger>
+    <TabsTrigger value="git">Git</TabsTrigger>
+  </TabsList>
+  <TabsContent value="files">
+    <text>Browse project files</text>
+  </TabsContent>
+  <TabsContent value="search">
+    <text>Search across files</text>
+  </TabsContent>
+  <TabsContent value="git">
+    <text>View git status</text>
+  </TabsContent>
+</Tabs>
+```
+
+```tsx title="Simple API"
 import { TabBar } from "@gridland/ui"
 
 <TabBar label="View" options={["Files", "Search", "Git"]} selectedIndex={0} />
 ```
 
-## Props
+## Components
+
+### Tabs
+
+Root component that manages the active tab state.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | `string` | `undefined` | Text label shown before the options |
-| `options` | `string[]` | -- | Array of option strings to display |
-| `selectedIndex` | `number` | -- | Zero-based index of the currently selected option |
+| `value` | `string` | — | Controlled active tab value |
+| `defaultValue` | `string` | `""` | Default active tab (uncontrolled) |
+| `onValueChange` | `(value: string) => void` | — | Called when the active tab changes |
+
+### TabsList
+
+Renders the horizontal tab bar from its `TabsTrigger` children.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Text label shown before the triggers |
 | `focused` | `boolean` | `true` | Whether the tab bar appears focused |
-| `activeColor` | `string` | `"cyan"` | Foreground color of the selected option when focused |
+| `activeColor` | `string` | `theme.accent` | Foreground color of the active trigger |
+| `separator` | `boolean` | `true` | Show horizontal separator below triggers |
+
+### TabsTrigger
+
+Declares a tab option. Does not render on its own — `TabsList` reads its props.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `string` | Unique value linking this trigger to its `TabsContent` |
+| `children` | `ReactNode` | Label text displayed in the tab bar |
+
+### TabsContent
+
+Renders its children only when its `value` matches the active tab.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `string` | Must match the active tab value to render |
+| `children` | `ReactNode` | Content shown when this tab is active |
+
+### TabBar (simple API)
+
+A convenience wrapper for cases where you don't need content panels.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Text label shown before the options |
+| `options` | `string[]` | — | Array of option strings to display |
+| `selectedIndex` | `number` | — | Zero-based index of the selected option |
+| `focused` | `boolean` | `true` | Whether the tab bar appears focused |
+| `activeColor` | `string` | `theme.accent` | Foreground color of the selected option |
+| `separator` | `boolean` | `true` | Show horizontal separator below tabs |

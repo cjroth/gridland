@@ -28,8 +28,8 @@ export type { TableProps } from "./table/table"
 export { Gradient, GRADIENTS, generateGradient, hexToRgb, rgbToHex } from "./gradient/gradient"
 export type { GradientProps, GradientName } from "./gradient/gradient"
 
-export { TabBar } from "./tab-bar/tab-bar"
-export type { TabBarProps } from "./tab-bar/tab-bar"
+export { Tabs, TabsList, TabsTrigger, TabsContent, TabBar } from "./tab-bar/tab-bar"
+export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps, TabBarProps } from "./tab-bar/tab-bar"
 
 export { StatusBar } from "./status-bar/status-bar"
 export type { StatusBarProps, StatusBarItem } from "./status-bar/status-bar"
