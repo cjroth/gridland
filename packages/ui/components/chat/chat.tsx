@@ -74,10 +74,12 @@ function MessageBubble({
   message,
   userColor,
   assistantColor,
+  foregroundColor,
 }: {
   message: ChatMessage
   userColor: string
   assistantColor: string
+  foregroundColor: string
 }) {
   const isUser = message.role === "user"
   const prefix = isUser ? "> " : "< "
@@ -86,7 +88,7 @@ function MessageBubble({
   return (
     <text wrapMode="word">
       <span style={textStyle({ bold: true, fg: color })}>{prefix}</span>
-      <span style={{ fg: theme.foreground }}>{message.content}</span>
+      <span style={{ fg: foregroundColor }}>{message.content}</span>
     </text>
   )
 }
@@ -94,10 +96,12 @@ function MessageBubble({
 function StreamingTextDisplay({
   text,
   assistantColor,
+  foregroundColor,
   cursorChar = "_",
 }: {
   text: string
   assistantColor: string
+  foregroundColor: string
   cursorChar?: string
 }) {
   if (!text) return null
@@ -105,8 +109,8 @@ function StreamingTextDisplay({
   return (
     <text wrapMode="word">
       <span style={textStyle({ bold: true, fg: assistantColor })}>{"< "}</span>
-      <span>{text}</span>
-      <span style={textStyle({ dim: true })}>{cursorChar}</span>
+      <span style={{ fg: foregroundColor }}>{text}</span>
+      <span style={textStyle({ dim: true, fg: foregroundColor })}>{cursorChar}</span>
     </text>
   )
 }
@@ -132,6 +136,7 @@ function ChatInput({
   placeholder = "Type a message...",
   prompt = "> ",
   promptColor,
+  foregroundColor,
   disabled = false,
   useKeyboard,
 }: {
@@ -139,6 +144,7 @@ function ChatInput({
   placeholder?: string
   prompt?: string
   promptColor: string
+  foregroundColor: string
   disabled?: boolean
   useKeyboard?: (handler: (event: any) => void) => void
 }) {
@@ -190,12 +196,12 @@ function ChatInput({
       <span style={textStyle({ fg: promptColor })}>{prompt}</span>
       {showPlaceholder ? (
         <>
-          <span style={textStyle({ dim: true })}>{placeholder}</span>
+          <span style={textStyle({ dim: true, fg: foregroundColor })}>{placeholder}</span>
           {!disabled && <span style={textStyle({ inverse: true })}>{" "}</span>}
         </>
       ) : (
         <>
-          <span>{value}</span>
+          <span style={{ fg: foregroundColor }}>{value}</span>
           {!disabled && <span style={textStyle({ inverse: true })}>{" "}</span>}
         </>
       )}
@@ -249,6 +255,7 @@ export function ChatPanel({
           message={msg}
           userColor={resolvedUserColor}
           assistantColor={resolvedAssistantColor}
+          foregroundColor={theme.foreground}
         />
       ))}
 
@@ -262,9 +269,10 @@ export function ChatPanel({
         <StreamingTextDisplay
           text={streamingText}
           assistantColor={resolvedAssistantColor}
+          foregroundColor={theme.foreground}
         />
       ) : isLoading ? (
-        <text style={textStyle({ dim: true })}>{"  "}{loadingText}</text>
+        <text style={textStyle({ dim: true, fg: theme.muted })}>{"  "}{loadingText}</text>
       ) : null}
 
       {/* Chat input with margin-top 1 */}
@@ -274,6 +282,7 @@ export function ChatPanel({
           placeholder={placeholder}
           prompt={promptChar}
           promptColor={resolvedPromptColor}
+          foregroundColor={theme.foreground}
           disabled={inputDisabled}
           useKeyboard={wrappedUseKeyboard}
         />

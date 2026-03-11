@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { textStyle } from "../text-style"
+import { useTheme } from "../theme/index"
 
 export interface StatusBarItem {
   /** The key or key combination text (e.g., "Tab", "←→", "q"). */
@@ -22,6 +23,7 @@ export interface StatusBarProps {
 }
 
 export function StatusBar({ items, extra }: StatusBarProps) {
+  const theme = useTheme()
   const parts: any[] = []
 
   if (extra !== undefined) {
@@ -29,7 +31,7 @@ export function StatusBar({ items, extra }: StatusBarProps) {
       <span key="extra">{extra}</span>,
     )
     parts.push(
-      <span key="pipe" style={textStyle({ dim: true })}>{"  \u2502  "}</span>,
+      <span key="pipe" style={textStyle({ dim: true, fg: theme.muted })}>{"  \u2502  "}</span>,
     )
   }
 
@@ -38,12 +40,12 @@ export function StatusBar({ items, extra }: StatusBarProps) {
       parts.push(<span key={`gap-${i}`}>{" "}</span>)
     }
     parts.push(
-      <span key={`key-${i}`} style={textStyle({ inverse: true, bold: true })}>
+      <span key={`key-${i}`} style={textStyle({ inverse: true, bold: true, fg: theme.foreground })}>
         {` ${item.key} `}
       </span>,
     )
     parts.push(
-      <span key={`label-${i}`} style={textStyle({ dim: true })}>
+      <span key={`label-${i}`} style={textStyle({ dim: true, fg: theme.muted })}>
         {` ${item.label}`}
       </span>,
     )
