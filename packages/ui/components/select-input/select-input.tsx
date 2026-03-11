@@ -170,19 +170,19 @@ export function SelectInput<V>({
       <box flexDirection="column">
         <text>
           <span style={textStyle({ fg: theme.success })}>{"◆ "}</span>
-          <span style={textStyle({ bold: true })}>{title}</span>
+          <span style={textStyle({ bold: true, fg: theme.foreground })}>{title}</span>
         </text>
         {selectedItem && (
           <text>
             <span style={textStyle({ fg: theme.success })}>{BAR} </span>
             <span>{"  "}</span>
             <span style={textStyle({ fg: theme.success })}>{"● "}</span>
-            <span>{selectedItem.label}</span>
+            <span style={textStyle({ fg: theme.foreground })}>{selectedItem.label}</span>
           </text>
         )}
         <text> </text>
         <text>
-          <span style={textStyle({ dim: true })}>{submittedStatus}</span>
+          <span style={textStyle({ dim: true, fg: theme.muted })}>{submittedStatus}</span>
         </text>
       </box>
     )
@@ -194,7 +194,7 @@ export function SelectInput<V>({
     <box flexDirection="column">
       <text>
         <span style={textStyle({ fg: diamondColor, dim: disabled })}>{"◆ "}</span>
-        <span style={textStyle({ bold: true, dim: disabled })}>{title}</span>
+        <span style={textStyle({ bold: true, dim: disabled, fg: theme.foreground })}>{title}</span>
         {required && <span style={textStyle({ fg: theme.error })}>{" *"}</span>}
       </text>
       {invalid && (
@@ -206,7 +206,7 @@ export function SelectInput<V>({
       {!hasItems && placeholder && (
         <text>
           <span style={textStyle({ fg: theme.muted })}>{BAR} </span>
-          <span style={textStyle({ dim: true })}>{"  "}{placeholder}</span>
+          <span style={textStyle({ dim: true, fg: theme.muted })}>{"  "}{placeholder}</span>
         </text>
       )}
       {visibleRows.map((row, i) => {
@@ -233,7 +233,7 @@ export function SelectInput<V>({
         const isItemDisabled = disabled || !!item.disabled
         const itemColor = isItemDisabled ? theme.muted
           : isHighlighted ? resolvedHighlight
-          : undefined
+          : theme.foreground
 
         return (
           <text key={item.key ?? String(item.value)}>
