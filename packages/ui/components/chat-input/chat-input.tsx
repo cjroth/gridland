@@ -2,6 +2,9 @@ import { useState, useRef } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
 
+/** Chat status matching Vercel AI SDK's useChat status pattern. */
+export type ChatStatus = "ready" | "submitted" | "streaming" | "error"
+
 export interface Suggestion {
   text: string
   desc?: string
@@ -22,9 +25,26 @@ export interface ChatInputProps {
   prompt?: string
   /** Color of the prompt character */
   promptColor?: string
-  /** Disable input (e.g. while streaming) */
+  /**
+   * AI chat status — drives disabled state and status indicator.
+   * When provided, takes precedence over `disabled`/`disabledText`.
+   * - `ready`: input enabled, accepts user input
+   * - `submitted`: input disabled, shows submittedText
+   * - `streaming`: input disabled, shows streamingText, Esc calls onStop
+   * - `error`: input enabled, shows error indicator
+   */
+  status?: ChatStatus
+  /** Called when user presses Escape during streaming to stop generation */
+  onStop?: () => void
+  /** Text shown when status is "submitted" */
+  submittedText?: string
+  /** Text shown when status is "streaming" */
+  streamingText?: string
+  /** Text shown when status is "error" */
+  errorText?: string
+  /** Disable input (e.g. while streaming). Ignored when `status` is provided. */
   disabled?: boolean
-  /** Text shown when disabled */
+  /** Text shown when disabled. Ignored when `status` is provided. */
   disabledText?: string
   /** Slash commands for autocomplete */
   commands?: { cmd: string; desc?: string }[]
@@ -52,7 +72,12 @@ export function ChatInput({
   placeholder = "Type a message...",
   prompt = "❯ ",
   promptColor,
-  disabled = false,
+  status,
+  onStop,
+  submittedText = "Thinking...",
+  streamingText: streamingLabel = "Generating...",
+  errorText = "An error occurred. Try again.",
+  disabled: disabledProp = false,
   disabledText = "Generating...",
   commands = [],
   files = [],
@@ -64,6 +89,16 @@ export function ChatInput({
 }: ChatInputProps) {
   const theme = useTheme()
   const resolvedPromptColor = promptColor ?? theme.muted
+
+  // Status-driven state: when `status` is provided, it drives disabled/hint text
+  const disabled = status ? status === "submitted" || status === "streaming" : disabledProp
+  const statusHintText = status === "submitted"
+    ? submittedText
+    : status === "streaming"
+      ? streamingLabel
+      : status === "error"
+        ? errorText
+        : disabledText
 
   const isControlled = controlledValue !== undefined
   const controlledRef = useRef(isControlled)
@@ -134,6 +169,12 @@ export function ChatInput({
   }
 
   useKeyboard?.((event: any) => {
+    // Escape during streaming calls onStop
+    if (event.name === "escape" && status === "streaming" && onStop) {
+      onStop()
+      return
+    }
+
     if (disabled) return
 
     if (event.name === "return") {
@@ -257,7 +298,7 @@ export function ChatInput({
         {value.length === 0 ? (
           <>
             {!disabled && <span style={textStyle({ fg: theme.muted })}>{CURSOR_CHAR}</span>}
-            <span style={textStyle({ dim: true })}>{disabled ? disabledText : " " + placeholder}</span>
+            <span style={textStyle({ dim: true })}>{disabled ? statusHintText : " " + placeholder}</span>
           </>
         ) : (
           <>
@@ -266,6 +307,12 @@ export function ChatInput({
           </>
         )}
       </text>
+
+      {status === "error" && (
+        <text>
+          <span style={textStyle({ fg: theme.error })}>{errorText}</span>
+        </text>
+      )}
 
       {showDividers && (
         <text wrapMode="none"><span style={textStyle({ dim: true, fg: theme.muted })}>{"─".repeat(500)}</span></text>

@@ -2,6 +2,7 @@ import { useState, useRef } from "react"
 import { textStyle } from "../text-style"
 import { useTheme } from "../theme/index"
 import type { Theme } from "../theme/index"
+import type { ChatStatus } from "../chat-input/chat-input"
 
 export interface ChatMessage {
   /** Unique identifier for the message. Used as a list key. */
@@ -30,13 +31,24 @@ export interface ChatPanelProps {
   messages: ChatMessage[]
   /** Partial text being streamed from the assistant. */
   streamingText?: string
-  /** Whether the assistant is processing. */
+  /**
+   * AI chat status — drives loading/streaming/error states.
+   * When provided, takes precedence over `isLoading`.
+   * - `ready`: input enabled
+   * - `submitted`: shows loading indicator, input disabled
+   * - `streaming`: shows streaming text, input disabled, Esc calls onStop
+   * - `error`: input enabled, shows error state
+   */
+  status?: ChatStatus
+  /** Whether the assistant is processing. Ignored when `status` is provided. */
   isLoading?: boolean
   /** Currently active tool calls to display as status cards. */
   activeToolCalls?: ToolCallInfo[]
   /** Callback fired when the user submits a message. */
   onSendMessage: (text: string) => void
-  /** Callback for cancellation. Wired to Escape key when loading/streaming. */
+  /** Callback to stop generation. Wired to Escape key during streaming. */
+  onStop?: () => void
+  /** Callback for cancellation. Wired to Escape key when loading/streaming. @deprecated Use `onStop` instead. */
   onCancel?: () => void
   /** Placeholder text shown in the input when empty. */
   placeholder?: string
@@ -206,9 +218,11 @@ function ChatInput({
 export function ChatPanel({
   messages,
   streamingText = "",
+  status,
   isLoading = false,
   activeToolCalls = [],
   onSendMessage,
+  onStop,
   onCancel,
   placeholder = "Type a message...",
   promptChar = "> ",
@@ -223,16 +237,19 @@ export function ChatPanel({
   const resolvedAssistantColor = assistantColor ?? theme.primary
   const resolvedPromptColor = promptColor ?? theme.secondary
   const statusColors = getStatusColors(theme)
-  const inputDisabled = isLoading || !!streamingText
 
-  // We need to split keyboard handling: escape goes to cancel, rest to ChatInput
-  // To do this, we wrap useKeyboard to intercept escape
+  // Derive loading/streaming state from status when provided
+  const isSubmitted = status ? status === "submitted" : isLoading && !streamingText
+  const isStreaming = status ? status === "streaming" : !!streamingText
+  const inputDisabled = isSubmitted || isStreaming
+  const stopHandler = onStop ?? onCancel
+
+  // Wrap useKeyboard to intercept escape for stop/cancel
   const wrappedUseKeyboard = useKeyboard
     ? (handler: (event: any) => void) => {
         useKeyboard((event: any) => {
-          // Escape triggers onCancel when loading/streaming
-          if (event.name === "escape" && inputDisabled && onCancel) {
-            onCancel()
+          if (event.name === "escape" && inputDisabled && stopHandler) {
+            stopHandler()
             return
           }
           handler(event)
@@ -258,12 +275,12 @@ export function ChatPanel({
       ))}
 
       {/* Streaming text OR loading indicator */}
-      {streamingText ? (
+      {isStreaming && streamingText ? (
         <StreamingTextDisplay
           text={streamingText}
           assistantColor={resolvedAssistantColor}
         />
-      ) : isLoading ? (
+      ) : isSubmitted ? (
         <text style={textStyle({ dim: true })}>{"  "}{loadingText}</text>
       ) : null}
 
