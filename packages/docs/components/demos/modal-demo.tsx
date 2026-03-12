@@ -27,7 +27,9 @@ function ModalApp() {
             <text style={textStyle({ dim: true })}>It stretches to fill the full terminal height.</text>
           </box>
         </Modal>
-        <StatusBar items={[{ key: "q", label: "close" }]} />
+        <box paddingX={1} paddingBottom={1}>
+          <StatusBar items={[{ key: "q", label: "close" }]} />
+        </box>
       </box>
     )
   }

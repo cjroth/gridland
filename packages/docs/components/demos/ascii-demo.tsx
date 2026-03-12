@@ -66,10 +66,12 @@ function AsciiApp() {
           </text>
         ))}
       </box>
-      <StatusBar
-        items={[{ key: "←→", label: "change font" }]}
-        extra={<span style={textStyle({ fg: theme.accent, bold: true })}>{font.name.padEnd(11)}</span>}
-      />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar
+          items={[{ key: "←→", label: "change font" }]}
+          extra={<span style={textStyle({ fg: theme.accent, bold: true })}>{font.name.padEnd(11)}</span>}
+        />
+      </box>
     </box>
   )
 }

@@ -73,9 +73,11 @@ function MessageDemo() {
         )}
       </box>
 
-      <StatusBar items={[
-        { key: "r", label: "restart" },
-      ]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "r", label: "restart" },
+        ]} />
+      </box>
     </box>
   )
 }

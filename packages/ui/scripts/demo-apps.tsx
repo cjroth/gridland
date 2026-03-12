@@ -81,10 +81,12 @@ export function GradientApp() {
       <box padding={1} flexDirection="column" alignItems="center" justifyContent="center" flexGrow={1}>
         <Gradient name={name}>{lines.join("\n")}</Gradient>
       </box>
-      <StatusBar
-        items={[{ key: "←→", label: "gradient" }, { key: "q", label: "quit" }]}
-        extra={<span style={textStyle({ fg: "cyan", bold: true })}>{name.padEnd(11)}</span>}
-      />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar
+          items={[{ key: "←→", label: "gradient" }, { key: "q", label: "quit" }]}
+          extra={<span style={textStyle({ fg: "cyan", bold: true })}>{name.padEnd(11)}</span>}
+        />
+      </box>
     </box>
   )
 }
@@ -106,10 +108,12 @@ export function AsciiApp() {
           <text key={i} fg="#88c0d0" bold>{line}</text>
         ))}
       </box>
-      <StatusBar
-        items={[{ key: "←→", label: "change font" }, { key: "q", label: "quit" }]}
-        extra={<span style={textStyle({ fg: "cyan", bold: true })}>{font.name.padEnd(11)}</span>}
-      />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar
+          items={[{ key: "←→", label: "change font" }, { key: "q", label: "quit" }]}
+          extra={<span style={textStyle({ fg: "cyan", bold: true })}>{font.name.padEnd(11)}</span>}
+        />
+      </box>
     </box>
   )
 }
@@ -125,7 +129,9 @@ export function TableApp() {
       <box padding={1} flexGrow={1}>
         <Table data={data} headerColor="cyan" borderColor="#5e81ac" />
       </box>
-      <StatusBar items={[{ key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -136,7 +142,9 @@ export function SpinnerApp() {
       <box flexGrow={1}>
         <SpinnerPicker useKeyboard={useKeyboard} />
       </box>
-      <StatusBar items={[{ key: "←→", label: "change variant" }, { key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "←→", label: "change variant" }, { key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -154,14 +162,16 @@ export function SelectInputApp() {
       <box padding={1} flexDirection="column" flexGrow={1}>
         <SelectInput items={items} title="Choose a language" useKeyboard={useKeyboard} onSubmit={() => setSubmitted(true)} />
       </box>
-      <StatusBar items={submitted
-        ? [{ key: "q", label: "quit" }]
-        : [
-          { key: "↑↓", label: "select" },
-          { key: "enter", label: "submit" },
-          { key: "q", label: "quit" },
-        ]
-      } />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={submitted
+          ? [{ key: "q", label: "quit" }]
+          : [
+            { key: "↑↓", label: "select" },
+            { key: "enter", label: "submit" },
+            { key: "q", label: "quit" },
+          ]
+        } />
+      </box>
     </box>
   )
 }
@@ -179,16 +189,18 @@ export function MultiSelectApp() {
       <box padding={1} flexDirection="column" flexGrow={1}>
         <MultiSelect items={items} title="Select languages" useKeyboard={useKeyboard} onSubmit={() => setSubmitted(true)} />
       </box>
-      <StatusBar items={submitted
-        ? [{ key: "q", label: "quit" }]
-        : [
-          { key: "↑↓", label: "move" },
-          { key: "enter", label: "select" },
-          { key: "a", label: "all" },
-          { key: "x", label: "clear" },
-          { key: "q", label: "quit" },
-        ]
-      } />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={submitted
+          ? [{ key: "q", label: "quit" }]
+          : [
+            { key: "↑↓", label: "move" },
+            { key: "enter", label: "select" },
+            { key: "a", label: "all" },
+            { key: "x", label: "clear" },
+            { key: "q", label: "quit" },
+          ]
+        } />
+      </box>
     </box>
   )
 }
@@ -244,11 +256,13 @@ export function PromptInputApp() {
             />
           </box>
         </Modal>
-        <StatusBar items={[
-          { key: "⏎", label: "select" },
-          { key: "esc", label: "cancel" },
-          { key: "q", label: "quit" },
-        ]} />
+        <box paddingX={1} paddingBottom={1}>
+          <StatusBar items={[
+            { key: "⏎", label: "select" },
+            { key: "esc", label: "cancel" },
+            { key: "q", label: "quit" },
+          ]} />
+        </box>
       </box>
     )
   }
@@ -282,13 +296,15 @@ export function PromptInputApp() {
           <span style={textStyle({ dim: true })}>{" " + model}</span>
         </text>
       </box>
-      <StatusBar items={[
-        { key: "⏎", label: "send" },
-        { key: "/", label: "commands" },
-        { key: "@", label: "files" },
-        { key: "↑", label: "history" },
-        { key: "q", label: "quit" },
-      ]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "⏎", label: "send" },
+          { key: "/", label: "commands" },
+          { key: "@", label: "files" },
+          { key: "↑", label: "history" },
+          { key: "q", label: "quit" },
+        ]} />
+      </box>
     </box>
   )
 }
@@ -337,12 +353,14 @@ export function TextInputApp() {
         ))}
       </box>
 
-      <StatusBar items={[
-        { key: "↑↓", label: "field" },
-        { key: "←→", label: "cursor" },
-        { key: "tab", label: "complete" },
-        { key: "^k/^u", label: "kill" },
-      ]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "↑↓", label: "field" },
+          { key: "←→", label: "cursor" },
+          { key: "tab", label: "complete" },
+          { key: "^k/^u", label: "kill" },
+        ]} />
+      </box>
     </box>
   )
 }
@@ -353,7 +371,9 @@ export function LinkApp() {
       <box padding={1} flexGrow={1}>
         <LinkDemoComponent useKeyboard={useKeyboard} />
       </box>
-      <StatusBar items={[{ key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -373,7 +393,9 @@ export function TabBarApp() {
         <TabBar label="View" options={tabs} selectedIndex={selectedIndex} />
         <text style={textStyle({ dim: true })}>Use ←/→ arrow keys to switch tabs</text>
       </box>
-      <StatusBar items={[{ key: "←→", label: "switch tab" }, { key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "←→", label: "switch tab" }, { key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -431,7 +453,9 @@ export function ModalApp() {
             <text style={textStyle({ dim: true })}>It stretches to fill the full terminal height.</text>
           </box>
         </Modal>
-        <StatusBar items={[{ key: "q", label: "close" }, { key: "Esc", label: "quit" }]} />
+        <box paddingX={1} paddingBottom={1}>
+          <StatusBar items={[{ key: "q", label: "close" }, { key: "Esc", label: "quit" }]} />
+        </box>
       </box>
     )
   }
@@ -445,7 +469,9 @@ export function ModalApp() {
           <span style={textStyle({ dim: true })}> to open modal</span>
         </text>
       </box>
-      <StatusBar items={[{ key: "m", label: "open modal" }, { key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "m", label: "open modal" }, { key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -469,7 +495,9 @@ export function PrimitivesApp() {
         </box>
         <text fg="#d8dee9" dim>{"  Nested boxes with borders, colors & flexbox layout"}</text>
       </box>
-      <StatusBar items={[{ key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -482,7 +510,9 @@ export function TerminalWindowApp() {
         <text>Hello from OpenTUI</text>
         <text style={textStyle({ fg: "green" })}>$ _</text>
       </box>
-      <StatusBar items={[{ key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -550,11 +580,13 @@ export function TimelineApp() {
           collapsed={!expanded}
         />
       </box>
-      <StatusBar items={[
-        { key: "ctrl+shift+e", label: "toggle" },
-        { key: "r", label: "restart" },
-        { key: "q", label: "quit" },
-      ]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "ctrl+shift+e", label: "toggle" },
+          { key: "r", label: "restart" },
+          { key: "q", label: "quit" },
+        ]} />
+      </box>
     </box>
   )
 }
@@ -673,7 +705,9 @@ export function MessageApp() {
           </Message>
         )}
       </box>
-      <StatusBar items={[{ key: "ctrl+shift+e", label: "toggle timeline" }, { key: "r", label: "restart" }, { key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "ctrl+shift+e", label: "toggle timeline" }, { key: "r", label: "restart" }, { key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }
@@ -749,7 +783,9 @@ export function ChatApp() {
         placeholder="Ask about your portfolio..."
         useKeyboard={useKeyboard}
       />
-      <StatusBar items={[{ key: "q", label: "quit" }]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[{ key: "q", label: "quit" }]} />
+      </box>
     </box>
   )
 }

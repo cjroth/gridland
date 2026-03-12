@@ -71,10 +71,12 @@ function TimelineApp() {
           collapsed={!expanded}
         />
       </box>
-      <StatusBar items={[
-        { key: "ctrl+shift+e", label: "toggle" },
-        { key: "r", label: "restart" },
-      ]} />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar items={[
+          { key: "ctrl+shift+e", label: "toggle" },
+          { key: "r", label: "restart" },
+        ]} />
+      </box>
     </box>
   )
 }

@@ -33,10 +33,12 @@ function GradientApp() {
       <box padding={1} flexDirection="column" alignItems="center" justifyContent="center" flexGrow={1}>
         <Gradient name={name}>{lines.join("\n")}</Gradient>
       </box>
-      <StatusBar
-        items={[{ key: "←→", label: "gradient" }]}
-        extra={<span style={textStyle({ fg: theme.accent, bold: true })}>{name.padEnd(11)}</span>}
-      />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar
+          items={[{ key: "←→", label: "gradient" }]}
+          extra={<span style={textStyle({ fg: theme.accent, bold: true })}>{name.padEnd(11)}</span>}
+        />
+      </box>
     </box>
   )
 }

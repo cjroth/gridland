@@ -24,10 +24,12 @@ function LinkApp() {
       <box padding={1} flexGrow={1}>
         <text>Made by <a href="https://cjroth.com" style={{ attributes: mode === "solid" ? 8 : mode === "dashed" ? 24 : mode === "dotted" ? 72 : 0 }}>Chris Roth</a>.</text>
       </box>
-      <StatusBar
-        extra={<span style={textStyle({ bold: true })}>{mode.padEnd(6)}</span>}
-        items={[{ key: "←→", label: "underline style" }]}
-      />
+      <box paddingX={1} paddingBottom={1}>
+        <StatusBar
+          extra={<span style={textStyle({ bold: true })}>{mode.padEnd(6)}</span>}
+          items={[{ key: "←→", label: "underline style" }]}
+        />
+      </box>
     </box>
   )
 }
