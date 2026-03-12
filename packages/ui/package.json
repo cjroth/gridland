@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsup",
     "demo": "bun run --tsconfig-override ./tsconfig.json scripts/demo.tsx",
-    "test": "bun test --preload ../web/test/preload.ts",
+    "test": "bun test --preload ../web/test/preload.ts --update-snapshots",
     "test:ci": "bun test --preload ../web/test/preload.ts --randomize --rerun-each 3"
   },
   "devDependencies": {

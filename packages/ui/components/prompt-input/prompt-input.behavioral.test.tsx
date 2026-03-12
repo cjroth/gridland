@@ -474,23 +474,44 @@ describe("PromptInput compound mode", () => {
     expect(text).toContain("─")
   })
 
-  it("renders submit icon for each status", () => {
-    const statuses = [
-      { status: "ready", icon: "⏎" },
-      { status: "submitted", icon: "◐" },
-      { status: "streaming", icon: "■" },
-      { status: "error", icon: "✕" },
-    ] as const
-    for (const { status, icon } of statuses) {
-      const { screen } = renderTui(
-        <PromptInput status={status}>
-          <PromptInput.Submit />
-        </PromptInput>,
-        { cols: 40, rows: 4 },
-      )
-      expect(screen.text()).toContain(icon)
-      cleanup()
-    }
+  it("renders submit icon for ready status", () => {
+    const { screen } = renderTui(
+      <PromptInput status="ready">
+        <PromptInput.Submit />
+      </PromptInput>,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("⏎")
+  })
+
+  it("renders submit icon for submitted status", () => {
+    const { screen } = renderTui(
+      <PromptInput status="submitted">
+        <PromptInput.Submit />
+      </PromptInput>,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("◐")
+  })
+
+  it("renders submit icon for streaming status", () => {
+    const { screen } = renderTui(
+      <PromptInput status="streaming">
+        <PromptInput.Submit />
+      </PromptInput>,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("■")
+  })
+
+  it("renders submit icon for error status", () => {
+    const { screen } = renderTui(
+      <PromptInput status="error">
+        <PromptInput.Submit />
+      </PromptInput>,
+      { cols: 40, rows: 4 },
+    )
+    expect(screen.text()).toContain("✕")
   })
 
   it("shows error text via StatusText subcomponent", () => {
