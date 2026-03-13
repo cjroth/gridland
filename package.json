@@ -10,10 +10,8 @@
     "test:e2e:update": "playwright test --update-snapshots",
     "test:e2e:ui": "playwright test --ui",
     "ui:build": "bun run --cwd packages/ui build && bun run --cwd packages/ui build:registry",
-    "demo": "bun run --cwd packages/ui demo",
-    "dev": "bun run --cwd examples/vite-example dev",
+    "dev": "bun run --cwd packages/docs dev",
     "docs:build": "bun run --cwd packages/docs build",
-    "dev:docs": "bun run --cwd packages/docs dev",
     "dev:next": "bun run --cwd examples/next-example dev",
     "clean": "rm -rf packages/*/dist packages/*/node_modules node_modules",
     "setup": "git submodule update --init && bun install && cd opentui && bun install && cd .. && bun run build"
