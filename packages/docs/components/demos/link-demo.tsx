@@ -22,7 +22,7 @@ function LinkApp() {
   return (
     <box flexDirection="column" flexGrow={1}>
       <box padding={1} flexGrow={1}>
-        <text>Made by <a href="https://cjroth.com" style={{ attributes: mode === "solid" ? 8 : mode === "dashed" ? 24 : mode === "dotted" ? 72 : 0 }}>Chris Roth</a>.</text>
+        <text>Made by <a href="https://cjroth.com" style={{ attributes: mode === "solid" ? 8 : mode === "dashed" ? 24 : mode === "dotted" ? 72 : 0 }}>Chris Roth</a> and <a href="https://jessicacheng.studio" style={{ attributes: mode === "solid" ? 8 : mode === "dashed" ? 24 : mode === "dotted" ? 72 : 0 }}>Jessica Cheng</a>.</text>
       </box>
       <box paddingX={1} paddingBottom={1}>
         <StatusBar
