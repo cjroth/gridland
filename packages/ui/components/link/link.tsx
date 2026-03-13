@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { useTheme } from "../theme/index"
 
 export type UnderlineStyle = "solid" | "dashed" | "dotted" | "none"
 
@@ -11,9 +12,13 @@ export interface LinkProps {
   children: ReactNode
   url: string
   underline?: UnderlineStyle
+  color?: string
 }
 
-export function Link({ children, url, underline = "solid" }: LinkProps) {
+export function Link({ children, url, underline = "solid", color }: LinkProps) {
+  const theme = useTheme()
+  const resolvedColor = color ?? theme.accent
+
   let attributes = 0
   if (underline === "solid") {
     attributes = UNDERLINE
@@ -25,7 +30,7 @@ export function Link({ children, url, underline = "solid" }: LinkProps) {
 
   return (
     <text>
-      <a href={url} style={{ attributes }}>{children}</a>
+      <a href={url} style={{ attributes, fg: resolvedColor }}>{children}</a>
     </text>
   )
 }

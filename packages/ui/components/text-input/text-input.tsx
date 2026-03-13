@@ -66,7 +66,7 @@ export function TextInput({ label, description, error, required = false, disable
     <box flexDirection="column">
       {showLabel && (
         <text>
-          <span style={textStyle({ fg: error ? theme.error : isFocused ? theme.primary : disabled ? theme.muted : theme.text, bold: !disabled, dim: disabled })}>
+          <span style={textStyle({ fg: error ? theme.error : isFocused ? theme.primary : disabled ? theme.muted : theme.foreground, bold: !disabled, dim: disabled })}>
             {isFocused ? '\u25B8 ' : '  '}
             {label}
           </span>
@@ -95,12 +95,12 @@ export function TextInput({ label, description, error, required = false, disable
             focused
             onInput={handleInput}
             onSubmit={handleSubmit}
-            cursorColor={theme.primary}
+            cursorColor={theme.muted}
             placeholderColor={theme.muted}
-            textColor={theme.text}
+            textColor={theme.foreground}
           />
         ) : (
-          <text style={{ fg: empty || disabled ? theme.muted : theme.text, dim: disabled }}>{empty ? placeholder : current}</text>
+          <text style={{ fg: empty || disabled ? theme.muted : theme.foreground, dim: disabled }}>{empty ? placeholder : current}</text>
         )}
       </box>
     </box>
