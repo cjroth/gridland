@@ -16,7 +16,6 @@ import {
   Modal,
   ChatPanel,
   Message,
-  AIChat,
   Timeline,
   type ChatMessage,
   type ToolCallInfo,
@@ -814,7 +813,6 @@ export const demos: Demo[] = [
   { name: "chat", app: () => <ChatApp /> },
   { name: "timeline", app: () => <TimelineApp /> },
   { name: "message", app: () => <MessageApp /> },
-  { name: "ai-chat", app: () => <AIChat useKeyboard={useKeyboard} /> },
   { name: "terminal-window", app: () => <TerminalWindowApp /> },
   { name: "landing", app: () => <LandingApp useKeyboard={useKeyboard} /> },
 ]

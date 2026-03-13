@@ -67,9 +67,6 @@ export type {
   MessageRole,
 } from "./message/message"
 
-export { AIChat } from "./ai-chat/ai-chat"
-export type { AIChatProps, AIChatModel, AIChatStep, AIChatMessage } from "./ai-chat/ai-chat"
-
 export { TerminalWindow } from "./terminal-window/terminal-window"
 export type { TerminalWindowProps } from "./terminal-window/terminal-window"
 
