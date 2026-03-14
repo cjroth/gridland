@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "gridland-ui",
-  "homepage": "https://gridland.dev",
+  "homepage": "https://gridland.io",
   "items": [
     {
       "name": "theme",
@@ -12,7 +12,7 @@
         {
           "path": "registry/ui/theme.tsx",
           "type": "registry:ui",
-          "content": "export interface Theme {\n  /** Main brand color — headings, highlights, active elements */\n  primary: string\n  /** Secondary brand color — interactive highlights, focused states */\n  accent: string\n  /** Tertiary color — user messages, checkboxes, prompts */\n  secondary: string\n  /** Subdued color — disabled states, placeholders, secondary text */\n  muted: string\n  /** Border and divider color */\n  border: string\n  /** Default foreground text color */\n  foreground: string\n  /** App background color */\n  background: string\n  /** Success state color */\n  success: string\n  /** Error state color */\n  error: string\n  /** Warning state color */\n  warning: string\n}\n\nexport const darkTheme: Theme = {\n  primary: \"#FF71CE\",\n  accent: \"#01CDFE\",\n  secondary: \"#B967FF\",\n  muted: \"#9D93B1\",\n  border: \"#B967FF\",\n  foreground: \"#F0E6FF\",\n  background: \"#0D0B10\",\n  success: \"#05FFA1\",\n  error: \"#FF6B6B\",\n  warning: \"#FFC164\",\n}\n\nexport const lightTheme: Theme = {\n  primary: \"#2563EB\",\n  accent: \"#7C3AED\",\n  secondary: \"#0369A1\",\n  muted: \"#64748B\",\n  border: \"#E2E8F0\",\n  foreground: \"#1E293B\",\n  background: \"#FFFFFF\",\n  success: \"#15803D\",\n  error: \"#E11D48\",\n  warning: \"#B45309\",\n}\n\nimport { createContext, useContext, type ReactNode } from \"react\"\nconst ThemeContext = createContext<Theme>(darkTheme)\n\nexport interface ThemeProviderProps {\n  theme: Theme\n  children: ReactNode\n}\n\nexport function ThemeProvider({ theme, children }: ThemeProviderProps) {\n  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>\n}\n\nexport function useTheme(): Theme {\n  return useContext(ThemeContext)\n}"
+          "content": "export interface Theme {\n  /** Main brand color — headings, highlights, active elements */\n  primary: string\n  /** Secondary brand color — interactive highlights, focused states */\n  accent: string\n  /** Tertiary color — user messages, checkboxes, prompts */\n  secondary: string\n  /** Subdued color — disabled states, secondary text, cursor */\n  muted: string\n  /** Placeholder text color */\n  placeholder: string\n  /** Border and divider color */\n  border: string\n  /** Default foreground text color */\n  foreground: string\n  /** App background color */\n  background: string\n  /** Success state color */\n  success: string\n  /** Error state color */\n  error: string\n  /** Warning state color */\n  warning: string\n}\n\nexport const darkTheme: Theme = {\n  primary: \"#FF71CE\",\n  accent: \"#01CDFE\",\n  secondary: \"#B967FF\",\n  muted: \"#9D93B1\",\n  placeholder: \"#7A7290\",\n  border: \"#B967FF\",\n  foreground: \"#F0E6FF\",\n  background: \"#0D0B10\",\n  success: \"#05FFA1\",\n  error: \"#FF6B6B\",\n  warning: \"#FFC164\",\n}\n\nexport const lightTheme: Theme = {\n  primary: \"#2563EB\",\n  accent: \"#7C3AED\",\n  secondary: \"#0369A1\",\n  muted: \"#CBD5E1\",\n  placeholder: \"#64748B\",\n  border: \"#E2E8F0\",\n  foreground: \"#1E293B\",\n  background: \"#FFFFFF\",\n  success: \"#15803D\",\n  error: \"#E11D48\",\n  warning: \"#B45309\",\n}\n\nimport { createContext, useContext, type ReactNode } from \"react\"\nconst ThemeContext = createContext<Theme>(darkTheme)\n\nexport interface ThemeProviderProps {\n  theme: Theme\n  children: ReactNode\n}\n\nexport function ThemeProvider({ theme, children }: ThemeProviderProps) {\n  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>\n}\n\nexport function useTheme(): Theme {\n  return useContext(ThemeContext)\n}"
         }
       ]
     },
@@ -35,7 +35,7 @@
       "title": "Provider",
       "description": "GridlandProvider root component with theme and keyboard context",
       "registryDependencies": [
-        "theme"
+        "@gridland/theme"
       ],
       "files": [
         {
@@ -64,7 +64,7 @@
       "title": "Ascii",
       "description": "ASCII art text renderer using figlet fonts",
       "registryDependencies": [
-        "theme"
+        "@gridland/theme"
       ],
       "files": [
         {
@@ -80,9 +80,9 @@
       "title": "Chat",
       "description": "Vertical chat interface with messages, tool calls, streaming, and input",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "prompt-input"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/prompt-input"
       ],
       "files": [
         {
@@ -111,7 +111,7 @@
       "title": "Link",
       "description": "Clickable hyperlink with configurable underline styles",
       "registryDependencies": [
-        "theme"
+        "@gridland/theme"
       ],
       "files": [
         {
@@ -153,9 +153,9 @@
       "title": "Message",
       "description": "AI chat message with text, reasoning, tool invocations, and sources",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "timeline"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/timeline"
       ],
       "files": [
         {
@@ -171,9 +171,9 @@
       "title": "Modal",
       "description": "Bordered overlay container with optional title and Escape key handling",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "provider"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/provider"
       ],
       "files": [
         {
@@ -189,9 +189,9 @@
       "title": "Multi Select",
       "description": "Multi-selection list with keyboard navigation and grouping",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "provider"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/provider"
       ],
       "files": [
         {
@@ -207,9 +207,9 @@
       "title": "Prompt Input",
       "description": "Rich text input with autocomplete, history, and AI chat status integration",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "provider"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/provider"
       ],
       "files": [
         {
@@ -225,9 +225,9 @@
       "title": "Select Input",
       "description": "Single-selection list with keyboard navigation and grouping",
       "registryDependencies": [
-        "theme",
-        "text-style",
-        "provider"
+        "@gridland/theme",
+        "@gridland/text-style",
+        "@gridland/provider"
       ],
       "files": [
         {
@@ -243,7 +243,7 @@
       "title": "Spinner",
       "description": "Animated loading spinner with 5 built-in variants",
       "registryDependencies": [
-        "theme"
+        "@gridland/theme"
       ],
       "files": [
         {
@@ -259,8 +259,8 @@
       "title": "Status Bar",
       "description": "Bottom status bar with keybinding hints",
       "registryDependencies": [
-        "theme",
-        "text-style"
+        "@gridland/theme",
+        "@gridland/text-style"
       ],
       "files": [
         {
@@ -276,8 +276,8 @@
       "title": "Tab Bar",
       "description": "Tabbed navigation with compound component API",
       "registryDependencies": [
-        "theme",
-        "text-style"
+        "@gridland/theme",
+        "@gridland/text-style"
       ],
       "files": [
         {
@@ -293,8 +293,8 @@
       "title": "Table",
       "description": "Data table with auto-sizing columns and Unicode borders",
       "registryDependencies": [
-        "theme",
-        "text-style"
+        "@gridland/theme",
+        "@gridland/text-style"
       ],
       "files": [
         {
@@ -323,14 +323,14 @@
       "title": "Text Input",
       "description": "Single-line text input with labels, validation, and controlled/uncontrolled modes",
       "registryDependencies": [
-        "theme",
-        "text-style"
+        "@gridland/theme",
+        "@gridland/text-style"
       ],
       "files": [
         {
           "path": "registry/ui/text-input.tsx",
           "type": "registry:ui",
-          "content": "// @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types\nimport { useCallback, useRef, useState } from 'react'\nimport { textStyle } from './text-style'\nimport { useTheme } from './theme'\n\nexport interface TextInputProps {\n  /** Field label shown above the input */\n  label?: string\n  /** Helper text shown inline next to the label */\n  description?: string\n  /** Error message — overrides description when set */\n  error?: string\n  /** Whether the field is required (shows indicator on label) */\n  required?: boolean\n  /** Whether the input is disabled */\n  disabled?: boolean\n  /** Controlled value */\n  value?: string\n  /** Called on every keystroke */\n  onChange?: (value: string) => void\n  /** Called when Enter is pressed */\n  onSubmit?: (value: string) => void\n  /** Hint text shown when empty */\n  placeholder?: string\n  /** Prompt string shown before the input (e.g. \"> \") */\n  prompt?: string\n  /** Whether the input is focused and accepting keystrokes */\n  focus?: boolean\n  /** Maximum characters allowed */\n  maxLength?: number\n}\n\nexport function TextInput({ label, description, error, required = false, disabled = false, value: controlledValue, onChange, onSubmit, placeholder, prompt, focus = true, maxLength }: TextInputProps) {\n  const theme = useTheme()\n  const [internalValue, setInternalValue] = useState('')\n  const isControlled = controlledValue !== undefined\n  const controlledRef = useRef(isControlled)\n  if (controlledRef.current !== isControlled) {\n    console.warn('TextInput: switching between controlled and uncontrolled is not supported.')\n    controlledRef.current = isControlled\n  }\n  const current = isControlled ? controlledValue : internalValue\n  const isFocused = focus && !disabled\n\n  const handleInput = useCallback(\n    (v: string) => {\n      if (!isControlled) setInternalValue(v)\n      onChange?.(v)\n    },\n    [isControlled, onChange],\n  )\n\n  const handleSubmit = useCallback(\n    (v: string) => {\n      onSubmit?.(v)\n      if (!isControlled) setInternalValue('')\n    },\n    [isControlled, onSubmit],\n  )\n\n  const empty = !current\n  const showLabel = label != null\n  const message = error ?? description\n\n  return (\n    <box flexDirection=\"column\">\n      {showLabel && (\n        <text>\n          <span style={textStyle({ fg: error ? theme.error : isFocused ? theme.primary : disabled ? theme.muted : theme.foreground, bold: !disabled, dim: disabled })}>\n            {isFocused ? '\\u25B8 ' : '  '}\n            {label}\n          </span>\n          {required && <span style={textStyle({ fg: theme.error })}>{' *'}</span>}\n          {current && maxLength != null && (\n            <span style={textStyle({ dim: true })}>\n              {' '}\n              {current.length}/{maxLength}\n            </span>\n          )}\n          {message != null && (\n            <span style={textStyle({ fg: error ? theme.error : theme.muted, dim: !error })}>\n              {' | '}\n              {message}\n            </span>\n          )}\n        </text>\n      )}\n      <box flexDirection=\"row\" marginLeft={showLabel ? 2 : 0}>\n        {prompt != null && <text style={{ fg: isFocused ? theme.primary : theme.muted }}>{prompt}</text>}\n        {isFocused ? (\n          <input\n            value={current}\n            placeholder={placeholder}\n            maxLength={maxLength}\n            focused\n            onInput={handleInput}\n            onSubmit={handleSubmit}\n            cursorColor={theme.muted}\n            placeholderColor={theme.muted}\n            textColor={theme.foreground}\n          />\n        ) : (\n          <text style={{ fg: empty || disabled ? theme.muted : theme.foreground, dim: disabled }}>{empty ? placeholder : current}</text>\n        )}\n      </box>\n    </box>\n  )\n}\n"
+          "content": "// @ts-nocheck — OpenTUI intrinsic elements conflict with React's HTML/SVG types\nimport { useCallback, useRef, useState } from 'react'\nimport { textStyle } from './text-style'\nimport { useTheme } from './theme'\n\nexport interface TextInputProps {\n  /** Field label shown above the input */\n  label?: string\n  /** Helper text shown inline next to the label */\n  description?: string\n  /** Error message — overrides description when set */\n  error?: string\n  /** Whether the field is required (shows indicator on label) */\n  required?: boolean\n  /** Whether the input is disabled */\n  disabled?: boolean\n  /** Controlled value */\n  value?: string\n  /** Called on every keystroke */\n  onChange?: (value: string) => void\n  /** Called when Enter is pressed */\n  onSubmit?: (value: string) => void\n  /** Hint text shown when empty */\n  placeholder?: string\n  /** Prompt string shown before the input (e.g. \"> \") */\n  prompt?: string\n  /** Whether the input is focused and accepting keystrokes */\n  focus?: boolean\n  /** Maximum characters allowed */\n  maxLength?: number\n}\n\nexport function TextInput({ label, description, error, required = false, disabled = false, value: controlledValue, onChange, onSubmit, placeholder, prompt, focus = true, maxLength }: TextInputProps) {\n  const theme = useTheme()\n  const [internalValue, setInternalValue] = useState('')\n  const isControlled = controlledValue !== undefined\n  const controlledRef = useRef(isControlled)\n  if (controlledRef.current !== isControlled) {\n    console.warn('TextInput: switching between controlled and uncontrolled is not supported.')\n    controlledRef.current = isControlled\n  }\n  const current = isControlled ? controlledValue : internalValue\n  const isFocused = focus && !disabled\n\n  const handleInput = useCallback(\n    (v: string) => {\n      if (!isControlled) setInternalValue(v)\n      onChange?.(v)\n    },\n    [isControlled, onChange],\n  )\n\n  const handleSubmit = useCallback(\n    (v: string) => {\n      onSubmit?.(v)\n      if (!isControlled) setInternalValue('')\n    },\n    [isControlled, onSubmit],\n  )\n\n  const empty = !current\n  const showLabel = label != null\n  const message = error ?? description\n\n  return (\n    <box flexDirection=\"column\">\n      {showLabel && (\n        <text>\n          <span style={textStyle({ fg: error ? theme.error : isFocused ? theme.primary : disabled ? theme.muted : theme.foreground, bold: !disabled, dim: disabled })}>\n            {isFocused ? '\\u25B8 ' : '  '}\n            {label}\n          </span>\n          {required && <span style={textStyle({ fg: theme.error })}>{' *'}</span>}\n          {current && maxLength != null && (\n            <span style={textStyle({ dim: true })}>\n              {' '}\n              {current.length}/{maxLength}\n            </span>\n          )}\n          {message != null && (\n            <span style={textStyle({ fg: error ? theme.error : theme.muted, dim: !error })}>\n              {' | '}\n              {message}\n            </span>\n          )}\n        </text>\n      )}\n      <box flexDirection=\"row\" marginLeft={showLabel ? 2 : 0}>\n        {prompt != null && <text style={{ fg: isFocused ? theme.primary : theme.muted }}>{prompt}</text>}\n        {isFocused ? (\n          <input\n            value={current}\n            placeholder={placeholder}\n            maxLength={maxLength}\n            focused\n            onInput={handleInput}\n            onSubmit={handleSubmit}\n            cursorColor={theme.muted}\n            cursorStyle={{ style: \"line\", blinking: empty }}\n            placeholderColor={theme.placeholder}\n            textColor={theme.foreground}\n          />\n        ) : (\n          <text style={{ fg: empty ? theme.placeholder : disabled ? theme.muted : theme.foreground, dim: disabled }}>{empty ? placeholder : current}</text>\n        )}\n      </box>\n    </box>\n  )\n}\n"
         }
       ]
     },
@@ -340,8 +340,8 @@
       "title": "Timeline",
       "description": "Step-by-step progress timeline with animated status indicators",
       "registryDependencies": [
-        "theme",
-        "text-style"
+        "@gridland/theme",
+        "@gridland/text-style"
       ],
       "files": [
         {

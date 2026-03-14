@@ -1,4 +1,4 @@
 {
   "title": "Guides",
-  "pages": ["components", "vite", "nextjs", "testing", "sandboxing", "ssr-for-agents"]
+  "pages": ["vite", "nextjs", "custom", "components", "testing", "sandboxing", "ssr-for-agents"]
 }

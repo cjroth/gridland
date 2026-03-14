@@ -1,0 +1,102 @@
+---
+title: Custom Bundler
+description: Use Gridland with webpack, Rollup, or other bundlers
+---
+
+import { Callout } from 'fumadocs-ui/components/callout'
+import { Step, Steps } from 'fumadocs-ui/components/steps'
+
+If you're not using Vite or Next.js, you can configure your bundler manually.
+Gridland provides first-party plugins for [Vite](/docs/guides/vite) and [Next.js](/docs/guides/nextjs) — use those if possible.
+
+## What the plugins do
+
+The Vite and Next.js plugins handle three things your bundler must also do:
+
+1. **Resolve `@opentui/*` packages** — Point `@opentui/core`, `@opentui/react`, and `@opentui/ui` to their source entry points
+2. **Shim Node.js built-ins** — The engine imports `fs`, `path`, `buffer`, `events`, etc. which need browser-safe stubs
+3. **Stub native modules** — Zig FFI, tree-sitter, and other native modules need no-op browser stubs
+
+## Webpack example
+
+<Steps>
+<Step>
+
+### Install
+
+```bash
+npm install @gridland/web
+```
+
+</Step>
+<Step>
+
+### Configure aliases
+
+Add webpack aliases that point opentui imports to the shims bundled with `@gridland/web`:
+
+```js title="webpack.config.js"
+const path = require("path")
+
+const gridlandWeb = path.dirname(require.resolve("@gridland/web/package.json"))
+const shim = (p) => path.resolve(gridlandWeb, p)
+
+module.exports = {
+  resolve: {
+    alias: {
+      // opentui packages
+      "@opentui/core": shim("src/core-shims/index.ts"),
+      "@opentui/react": require.resolve("@opentui/react"),
+      "@opentui/ui": require.resolve("@opentui/ui"),
+
+      // FFI stubs
+      "bun:ffi": shim("src/shims/bun-ffi.ts"),
+      bun: shim("src/shims/bun-ffi.ts"),
+
+      // Node.js built-in stubs
+      events$: shim("src/shims/events-shim.ts"),
+      fs$: shim("src/shims/node-fs.ts"),
+      "fs/promises": shim("src/shims/node-fs.ts"),
+      path$: shim("src/shims/node-path.ts"),
+      os$: shim("src/shims/node-os.ts"),
+      util$: shim("src/shims/node-util.ts"),
+      stream$: shim("src/shims/node-stream.ts"),
+      url$: shim("src/shims/node-url.ts"),
+
+      // Tree-sitter stubs
+      "tree-sitter-styled-text": shim("src/shims/tree-sitter-styled-text-stub.ts"),
+      "web-tree-sitter": shim("src/shims/tree-sitter-stub.ts"),
+      "hast-styled-text": shim("src/shims/hast-stub.ts"),
+    },
+  },
+  experiments: {
+    topLevelAwait: true,
+  },
+}
+```
+
+</Step>
+<Step>
+
+### Use it
+
+```tsx title="App.tsx"
+import { TUI } from "@gridland/web"
+
+export default function App() {
+  return (
+    <TUI style={{ width: "100vw", height: "100vh" }}>
+      <box border borderStyle="rounded" padding={1}>
+        <text fg="#a3be8c">Hello from Gridland!</text>
+      </box>
+    </TUI>
+  )
+}
+```
+
+</Step>
+</Steps>
+
+<Callout type="info">
+The full list of aliases and shims can be found in the [Vite plugin source](https://github.com/cjroth/gridland/blob/main/packages/web/src/vite-plugin.ts) and [Next.js plugin source](https://github.com/cjroth/gridland/blob/main/packages/web/src/next-plugin.ts).
+</Callout>

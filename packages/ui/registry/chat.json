@@ -5,9 +5,9 @@
   "title": "Chat",
   "description": "Vertical chat interface with messages, tool calls, streaming, and input",
   "registryDependencies": [
-    "theme",
-    "text-style",
-    "prompt-input"
+    "@gridland/theme",
+    "@gridland/text-style",
+    "@gridland/prompt-input"
   ],
   "files": [
     {

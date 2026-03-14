@@ -5,9 +5,9 @@
   "title": "Modal",
   "description": "Bordered overlay container with optional title and Escape key handling",
   "registryDependencies": [
-    "theme",
-    "text-style",
-    "provider"
+    "@gridland/theme",
+    "@gridland/text-style",
+    "@gridland/provider"
   ],
   "files": [
     {

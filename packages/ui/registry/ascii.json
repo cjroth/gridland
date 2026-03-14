@@ -5,7 +5,7 @@
   "title": "Ascii",
   "description": "ASCII art text renderer using figlet fonts",
   "registryDependencies": [
-    "theme"
+    "@gridland/theme"
   ],
   "files": [
     {

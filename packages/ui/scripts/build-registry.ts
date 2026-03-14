@@ -319,13 +319,17 @@ for (const item of ITEMS) {
   writeFileSync(join(REGISTRY_UI_DIR, fileName), source)
 
   // Build registry item
+  // Prefix registryDependencies with @gridland/ so shadcn resolves them
+  // from the gridland registry namespace rather than the default shadcn registry.
+  const namespacedDeps = item.registryDependencies.map((dep) => `@gridland/${dep}`)
+
   const registryItem: RegistryItem = {
     name: item.name,
     type: item.type,
     title: item.title,
     description: item.description,
-    ...(item.registryDependencies.length > 0
-      ? { registryDependencies: item.registryDependencies }
+    ...(namespacedDeps.length > 0
+      ? { registryDependencies: namespacedDeps }
       : {}),
     files: [{ path: filePath, type: item.type, content: source }],
   }
@@ -347,7 +351,7 @@ for (const item of ITEMS) {
 const registry = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
   name: "gridland-ui",
-  homepage: "https://gridland.dev",
+  homepage: "https://gridland.io",
   items: registryItems,
 }
 

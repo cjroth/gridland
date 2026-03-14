@@ -5,8 +5,8 @@
   "title": "Timeline",
   "description": "Step-by-step progress timeline with animated status indicators",
   "registryDependencies": [
-    "theme",
-    "text-style"
+    "@gridland/theme",
+    "@gridland/text-style"
   ],
   "files": [
     {

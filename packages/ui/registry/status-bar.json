@@ -5,8 +5,8 @@
   "title": "Status Bar",
   "description": "Bottom status bar with keybinding hints",
   "registryDependencies": [
-    "theme",
-    "text-style"
+    "@gridland/theme",
+    "@gridland/text-style"
   ],
   "files": [
     {
