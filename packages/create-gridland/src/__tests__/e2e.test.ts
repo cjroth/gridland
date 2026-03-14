@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "bun:test"
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from "bun:test"
 import { execSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
@@ -6,6 +6,28 @@ import os from "node:os"
 
 const CLI_PATH = path.resolve(__dirname, "../../dist/index.js")
 const MONOREPO_ROOT = path.resolve(__dirname, "../../../..")
+
+// Pre-pack local packages as tarballs so e2e tests install real npm-like
+// packages (not file: links which cause resolution issues with Vite/Rollup).
+let tarballs: Record<string, string> = {}
+
+beforeAll(() => {
+  const tarballDir = fs.mkdtempSync(path.join(os.tmpdir(), "gridland-tarballs-"))
+  const packages: Record<string, string> = {
+    "@gridland/web": path.join(MONOREPO_ROOT, "packages/web"),
+    "@gridland/demo": path.join(MONOREPO_ROOT, "packages/demo"),
+  }
+  for (const [name, pkgDir] of Object.entries(packages)) {
+    const output = execSync(`npm pack --pack-destination ${tarballDir}`, {
+      cwd: pkgDir,
+      encoding: "utf-8",
+      timeout: 30000,
+    }).trim()
+    // npm pack outputs the filename on the last line
+    const filename = output.split("\n").pop()!.trim()
+    tarballs[name] = path.join(tarballDir, filename)
+  }
+})
 
 let tmpDir: string
 
@@ -34,7 +56,7 @@ function runInProject(projectName: string, cmd: string): string {
 }
 
 /**
- * Override @gridland/* dependencies with local workspace paths so e2e tests
+ * Override @gridland/* dependencies with local tarball paths so e2e tests
  * work without requiring packages to be published to npm first.
  */
 function useLocalPackages(projectName: string) {
@@ -42,14 +64,9 @@ function useLocalPackages(projectName: string) {
   const pkgPath = path.join(projectDir, "package.json")
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"))
 
-  const localPackages: Record<string, string> = {
-    "@gridland/web": path.join(MONOREPO_ROOT, "packages/web"),
-    "@gridland/demo": path.join(MONOREPO_ROOT, "packages/demo"),
-  }
-
-  for (const [name, localPath] of Object.entries(localPackages)) {
+  for (const [name, tarball] of Object.entries(tarballs)) {
     if (pkg.dependencies?.[name]) {
-      pkg.dependencies[name] = `file:${localPath}`
+      pkg.dependencies[name] = `file:${tarball}`
     }
   }
 
