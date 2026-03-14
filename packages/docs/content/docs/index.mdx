@@ -10,72 +10,58 @@ import { Card, Cards } from 'fumadocs-ui/components/card'
 Gridland renders terminal-style UIs directly to an HTML5 Canvas using React.
 Built on the [opentui](https://opentui.com) engine. No xterm.js, no terminal emulator, just a React reconciler, Yoga layout, and canvas pixels.
 
-## Features
+## Start a new project
 
-- **Canvas rendering** - TUI content drawn directly to `<canvas>`, not a DOM tree
-- **React reconciler** - Use JSX with `<box>`, `<text>`, and other TUI primitives
-- **SSR-safe** - Single `<TUI>` component with built-in client detection
-- **Yoga layout** - Flexbox positioning via `yoga-layout`
-- **Framework support** - Works with Vite and Next.js
-- **Interaction** - Text selection, copy/paste, keyboard events, and drag-and-drop
-
-## Quick Start
-
-Install the package in your project:
+Scaffold a new Gridland app with everything pre-configured:
 
 <Tabs items={['bun', 'npm', 'yarn', 'pnpm']}>
 <Tab value="bun">
 ```bash title="Terminal"
-bun add @gridland/web
+bunx create-gridland my-app
 ```
 </Tab>
 <Tab value="npm">
 ```bash title="Terminal"
-npm install @gridland/web
+npx create-gridland my-app
 ```
 </Tab>
 <Tab value="yarn">
 ```bash title="Terminal"
-yarn add @gridland/web
+yarn create gridland my-app
 ```
 </Tab>
 <Tab value="pnpm">
 ```bash title="Terminal"
-pnpm add @gridland/web
+pnpm create gridland my-app
 ```
 </Tab>
 </Tabs>
 
-Then wrap your TUI content in `TUI`:
+## Add to an existing project
 
-```tsx title="App.tsx"
-import { TUI } from "@gridland/web"
-
-function App() {
-  return (
-    <TUI style={{ width: "100vw", height: "100vh" }}>
-      <box border borderStyle="rounded" padding={1}>
-        <text fg="#a3be8c">Hello from Gridland!</text>
-      </box>
-    </TUI>
-  )
-}
-```
-
-<Callout type="info">
-You'll also need to configure your bundler (Vite or webpack) to resolve the underlying opentui engine modules. See the framework guides below.
-</Callout>
-
-## Framework Guides
+Choose your framework:
 
 <Cards>
-  <Card title="Vite Setup" href="/docs/guides/vite">
-    Quickest way to get started with Gridland.
+  <Card title="Vite" href="/docs/guides/vite">
+    Quickest setup — one plugin, zero config.
   </Card>
-  <Card title="Next.js Setup" href="/docs/guides/nextjs">
+  <Card title="Next.js" href="/docs/guides/nextjs">
     For server-rendered apps using the App Router.
   </Card>
+  <Card title="Custom Bundler" href="/docs/guides/custom">
+    Webpack, Rollup, or any other bundler.
+  </Card>
 </Cards>
+
+## Install components
+
+Gridland UI components are distributed via a [shadcn](https://ui.shadcn.com) registry. Install individual components into your project so you own the code and can customize it freely.
+
+```bash
+bunx shadcn@latest add @gridland/spinner
+```
+
+See the [Installing Components](/docs/guides/components) guide for setup instructions and the full list of available components.
 
 ## Packages
 

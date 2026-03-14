@@ -5,7 +5,7 @@
   "title": "Link",
   "description": "Clickable hyperlink with configurable underline styles",
   "registryDependencies": [
-    "theme"
+    "@gridland/theme"
   ],
   "files": [
     {

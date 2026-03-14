@@ -5,9 +5,9 @@
   "title": "Message",
   "description": "AI chat message with text, reasoning, tool invocations, and sources",
   "registryDependencies": [
-    "theme",
-    "text-style",
-    "timeline"
+    "@gridland/theme",
+    "@gridland/text-style",
+    "@gridland/timeline"
   ],
   "files": [
     {

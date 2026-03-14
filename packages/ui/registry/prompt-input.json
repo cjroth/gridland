@@ -5,9 +5,9 @@
   "title": "Prompt Input",
   "description": "Rich text input with autocomplete, history, and AI chat status integration",
   "registryDependencies": [
-    "theme",
-    "text-style",
-    "provider"
+    "@gridland/theme",
+    "@gridland/text-style",
+    "@gridland/provider"
   ],
   "files": [
     {

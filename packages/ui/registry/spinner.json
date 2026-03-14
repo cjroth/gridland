@@ -5,7 +5,7 @@
   "title": "Spinner",
   "description": "Animated loading spinner with 5 built-in variants",
   "registryDependencies": [
-    "theme"
+    "@gridland/theme"
   ],
   "files": [
     {

@@ -5,8 +5,8 @@
   "title": "Tab Bar",
   "description": "Tabbed navigation with compound component API",
   "registryDependencies": [
-    "theme",
-    "text-style"
+    "@gridland/theme",
+    "@gridland/text-style"
   ],
   "files": [
     {

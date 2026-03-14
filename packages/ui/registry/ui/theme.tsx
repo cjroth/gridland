@@ -5,8 +5,10 @@ export interface Theme {
   accent: string
   /** Tertiary color — user messages, checkboxes, prompts */
   secondary: string
-  /** Subdued color — disabled states, placeholders, secondary text */
+  /** Subdued color — disabled states, secondary text, cursor */
   muted: string
+  /** Placeholder text color */
+  placeholder: string
   /** Border and divider color */
   border: string
   /** Default foreground text color */
@@ -26,6 +28,7 @@ export const darkTheme: Theme = {
   accent: "#01CDFE",
   secondary: "#B967FF",
   muted: "#9D93B1",
+  placeholder: "#7A7290",
   border: "#B967FF",
   foreground: "#F0E6FF",
   background: "#0D0B10",
@@ -38,7 +41,8 @@ export const lightTheme: Theme = {
   primary: "#2563EB",
   accent: "#7C3AED",
   secondary: "#0369A1",
-  muted: "#64748B",
+  muted: "#CBD5E1",
+  placeholder: "#64748B",
   border: "#E2E8F0",
   foreground: "#1E293B",
   background: "#FFFFFF",

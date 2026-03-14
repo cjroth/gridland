@@ -5,7 +5,7 @@
   "title": "Provider",
   "description": "GridlandProvider root component with theme and keyboard context",
   "registryDependencies": [
-    "theme"
+    "@gridland/theme"
   ],
   "files": [
     {

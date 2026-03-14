@@ -5,8 +5,8 @@
   "title": "Table",
   "description": "Data table with auto-sizing columns and Unicode borders",
   "registryDependencies": [
-    "theme",
-    "text-style"
+    "@gridland/theme",
+    "@gridland/text-style"
   ],
   "files": [
     {

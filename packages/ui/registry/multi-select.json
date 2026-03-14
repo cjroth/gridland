@@ -5,9 +5,9 @@
   "title": "Multi Select",
   "description": "Multi-selection list with keyboard navigation and grouping",
   "registryDependencies": [
-    "theme",
-    "text-style",
-    "provider"
+    "@gridland/theme",
+    "@gridland/text-style",
+    "@gridland/provider"
   ],
   "files": [
     {
