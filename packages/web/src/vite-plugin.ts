@@ -238,13 +238,18 @@ export function gridlandWebPlugin(): Plugin[] {
         aliases[path.resolve(coreRoot, "src", key)] = path.resolve(pkgRoot, shimPath)
       }
 
-      // Resolve npm packages from gridland-web's node_modules so consuming
-      // projects don't need them as direct dependencies. Directory aliases
-      // let subpath imports (e.g. react-reconciler/constants) work via
-      // Vite's prefix matching, and ensure CJS packages go through
-      // Vite's pre-bundling for proper ESM conversion.
+      // Resolve npm packages from @gridland/web's dependency tree so
+      // consuming projects don't need them as direct dependencies.
+      // Uses _require to find the actual installed location (handles
+      // hoisted node_modules). Directory aliases let subpath imports
+      // (e.g. react-reconciler/constants) work via Vite's prefix
+      // matching, and ensure CJS packages go through pre-bundling.
       for (const pkg of ["react-reconciler", "yoga-layout", "diff", "marked"]) {
-        aliases[pkg] = path.resolve(pkgRoot, "node_modules", pkg)
+        try {
+          aliases[pkg] = path.dirname(_require.resolve(pkg + "/package.json"))
+        } catch {
+          aliases[pkg] = path.resolve(pkgRoot, "node_modules", pkg)
+        }
       }
 
       return {
