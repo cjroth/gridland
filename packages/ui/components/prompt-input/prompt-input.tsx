@@ -575,6 +575,23 @@ export function PromptInput({
       }
       return
     }
+
+    // Character-level input fallback (used when <input> intrinsic is not available, e.g. in tests)
+    if (event.name === "backspace" || event.name === "delete") {
+      updateValue(valueRef.current.slice(0, -1))
+      return
+    }
+
+    if (event.ctrl || event.meta) return
+
+    if (event.name === "space") {
+      updateValue(valueRef.current + " ")
+      return
+    }
+
+    if (event.name && event.name.length === 1) {
+      updateValue(valueRef.current + event.name)
+    }
   })
 
   // ── Build context for subcomponents ────────────────────────────────────
